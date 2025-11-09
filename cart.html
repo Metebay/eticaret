@@ -3,34 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sepetim - CRSSPORA</title>
+    <title>CRSSPORA - Sepetim</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        /* CRSSPORA Tema Rengi (Emerald) */
+        .text-emerald-600 { color: #059669; }
+        .bg-emerald-500 { background-color: #10b981; }
+        .hover\:bg-emerald-600:hover { background-color: #059669; }
+        .border-emerald-500 { border-color: #10b981; }
+        .focus\:ring-emerald-500:focus { --tw-ring-color: #10b981; }
+
+        /* Miktarı input'u için sabit genişlik */
+        .quantity-input {
+            width: 70px; 
+            text-align: center;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
 
     <!-- Ana Navigasyon Çubuğu -->
-    <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+    <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="text-2xl font-bold text-emerald-600">CRSSPORA</a>
+            <div class="flex justify-between items-center py-4">
+                <a href="./index.html" class="text-3xl font-extrabold text-emerald-600 tracking-wider">CRSSPORA</a>
                 <div class="flex items-center space-x-6">
-                    <a href="index.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Ana Sayfa</a>
-                    <a href="cart.html" class="text-gray-600 hover:text-emerald-600 transition-colors relative">
-                        Sepet
-                        <span id="cart-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
+                    <a href="./index.html" class="text-gray-600 hover:text-emerald-600 transition duration-150 font-medium" id="index-link">Ana Sayfa</a>
+                    <a href="./cart.html" class="text-gray-600 hover:text-emerald-600 relative transition duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
                     </a>
+                    
+                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
                     <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="login.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Giriş Yap</a>
-                        <a href="register.html" class="text-emerald-600 bg-emerald-100 hover:bg-emerald-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kayıt Ol</a>
+                        <a href="./login.html" class="text-gray-600 hover:text-emerald-600 transition duration-150">Giriş Yap</a>
+                        <a href="./register.html" class="text-white bg-emerald-500 hover:bg-emerald-600 px-3 py-1.5 rounded-lg shadow-md font-semibold transition duration-150">Kayıt Ol</a>
                     </div>
+                    
+                    <!-- Giriş yapıldığında görünecek linkler -->
                     <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700 hidden sm:block"></span>
-                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800 transition-colors">Admin Paneli</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-emerald-600 transition-colors text-sm font-medium">Çıkış Yap</button>
+                        <span id="user-email" class="text-sm text-gray-700 font-medium truncate max-w-[100px]"></span>
+                        <a href="./admin.html" id="admin-link" class="hidden text-red-600 font-bold hover:text-red-800 transition duration-150 border border-red-600 px-3 py-1 rounded-lg">Admin</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-red-600 transition duration-150">Çıkış Yap</button>
                     </div>
                 </div>
             </div>
@@ -38,66 +55,74 @@
     </nav>
 
     <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4 sm:px-6 lg:px-8 mt-8">
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
 
-        <!-- ===== 5. Sepet Sayfası (YENİ TASARIM) ===== -->
-        <div id="page-cart">
-            <h1 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Sepetim</h1>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-8 border-b-2 border-emerald-500 pb-2">Sepetim</h1>
+        
+        <div id="cart-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Yeni 2 Sütunlu Grid Yapısı -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- Sol Sütun: Sepet Ürünleri -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl">
-                        <h2 class="text-2xl font-semibold mb-6 text-gray-800">Sepetinizdeki Ürünler</h2>
-                        <!-- Ürünler listesi -->
-                        <div id="cart-items" class="divide-y divide-gray-200">
-                            <!-- Sepet ürünleri buraya yüklenecek (common.js) -->
-                        </div>
-                        <!-- Sepet boşsa göster -->
-                        <div id="cart-empty" class="text-center text-gray-500 py-10 hidden">
-                            Sepetiniz boş.
-                        </div>
+            <!-- Sol Sütun: Sepet İçeriği -->
+            <div class="lg:col-span-2">
+                <div id="cart-items-container" class="bg-white p-6 rounded-xl shadow-lg">
+                    <div id="cart-items" class="divide-y divide-gray-200">
+                        <!-- Sepet ürünleri buraya yüklenecek -->
+                    </div>
+                    
+                    <!-- Sepet Boşsa -->
+                    <div id="cart-empty" class="text-center py-10 text-gray-500 text-lg hidden">
+                        Sepetiniz boş. Hemen ürünlerimizi keşfedin!
+                        <a href="./index.html" class="block mt-4 text-emerald-600 font-semibold hover:underline">Alışverişe Başla</a>
                     </div>
                 </div>
-
-                <!-- Sağ Sütun: Sipariş Özeti (Sticky) -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl sticky top-24">
-                        <h2 class="text-2xl font-semibold mb-6 text-gray-800">Sipariş Özeti</h2>
-                        
-                        <!-- cart-summary, cart-full ve cart-total-price JS tarafından yönetilir -->
-                        <div id="cart-summary">
-                            <!-- Sepet doluysa göster -->
-                            <div id="cart-full" class="hidden space-y-4">
-                                <div class="flex justify-between items-center font-bold text-2xl">
-                                    <span>Toplam Tutar:</span>
-                                    <span id="cart-total-price" class="text-emerald-600">0.00 TL</span>
-                                </div>
-                                <a href="checkout.html" class="block w-full text-center bg-emerald-600 text-white py-3 px-4 rounded-md hover:bg-emerald-700 mt-6 font-semibold text-lg transition-colors shadow-lg hover:shadow-emerald-300">Siparişi Onayla</a>
-                            </div>
-                        </div>
-                        
-                        <!-- Not: 'cart-empty' durumu JS tarafından idare edilir ve sol sütunda gösterilir -->
-                    </div>
-                </div>
-                
             </div>
+
+            <!-- Sağ Sütun: Sepet Özeti (Sticky) -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-xl shadow-2xl lg:sticky lg:top-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-5 border-b pb-3">Sipariş Özeti</h2>
+                    
+                    <div id="cart-summary-details" class="space-y-3">
+                        <!-- Özet detayları buraya eklenecek -->
+                        <div class="flex justify-between text-lg font-medium">
+                            <span>Ara Toplam</span>
+                            <span id="cart-subtotal">0.00 TL</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-medium text-red-600">
+                            <span>İndirim Tutarı</span>
+                            <span id="cart-discount">- 0.00 TL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-200">
+                        <div class="flex justify-between items-center font-extrabold text-2xl">
+                            <span>Genel Toplam:</span>
+                            <span id="cart-total-price" class="text-emerald-600">0.00 TL</span>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Butonu -->
+                    <a href="./checkout.html" id="checkout-button" class="block w-full text-center bg-emerald-500 text-white py-3.5 px-4 rounded-xl hover:bg-emerald-600 mt-6 font-bold text-lg transition duration-150 shadow-md">
+                        Siparişi Onayla
+                    </a>
+                </div>
+            </div>
+            
         </div>
-
     </main>
-
+    
     <!-- Hata/Bilgi Modalı -->
-    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" onclick="closeModal()">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" onclick="event.stopPropagation()">
-            <div class="mt-3 text-center">
-                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900"></h3>
-                <div class="mt-2 px-7 py-3">
+    <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[100] hidden transition-opacity" onclick="closeModal()">
+        <div class="relative top-0 mx-4 p-6 border w-full max-w-sm shadow-2xl rounded-xl bg-white transform transition-all duration-300 scale-100" onclick="event.stopPropagation()">
+            <div class="mt-2 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 mb-4">
+                    <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 id="modal-title" class="text-xl leading-6 font-bold text-gray-900">Başlık</h3>
+                <div class="mt-4 px-1 py-1">
                     <p id="modal-message" class="text-sm text-gray-500"></p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-300" onclick="closeModal()">
+                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-500 text-white text-base font-semibold rounded-lg w-full shadow-md hover:bg-emerald-600 transition duration-150" onclick="closeModal()">
                         Kapat
                     </button>
                 </div>
@@ -105,25 +130,118 @@
         </div>
     </div>
 
-
-    <!-- Sadece bu sayfaya özel JS -->
+    <!-- JavaScript Mantığı -->
     <script type="module">
         import { 
-            showModal, 
-            updateCartCount, 
-            initAuthAndNav,
-            loadCartPage
+            initAuthAndNav, 
+            getCart, 
+            getCartTotalPrice,
+            removeFromCart,
+            updateCartQuantity,
+            showModal
         } from './common.js';
-        
-        // Fonksiyonu global scope'a ata ki common.js içinden çağırılabilsin
-        window.loadCartPage = loadCartPage;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            initAuthAndNav();
-            updateCartCount();
-            loadCartPage(); // Sepet sayfasını yükle
-        });
-        
+        // Sayfa kimliğini tanımla
+        const PAGE_ID = 'cart';
+
+        window.onload = async () => {
+            await initAuthAndNav(PAGE_ID);
+            loadCartPage();
+        };
+
+        // Fonksiyonları global scope'a ekle ki HTML event'leri çalışsın
+        window.removeFromCart = (id) => {
+            removeFromCart(id);
+            loadCartPage(); // Sepet değişince sayfayı yenile
+        };
+        window.updateCartQuantity = (id, quantity) => {
+            if (quantity > 0) {
+                updateCartQuantity(id, quantity);
+                loadCartPage(); // Sepet değişince sayfayı yenile
+            }
+        };
+
+        /**
+         * Sepet içeriğini yükler ve UI'ı günceller.
+         */
+        function loadCartPage() {
+            const cart = getCart();
+            const itemsDiv = document.getElementById('cart-items');
+            const cartEmptyDiv = document.getElementById('cart-empty');
+            const checkoutButton = document.getElementById('checkout-button');
+            
+            // Sepet Boşsa
+            if (cart.length === 0) {
+                itemsDiv.innerHTML = '';
+                cartEmptyDiv.classList.remove('hidden');
+                document.getElementById('cart-content').classList.add('hidden');
+                return;
+            }
+
+            cartEmptyDiv.classList.add('hidden');
+            document.getElementById('cart-content').classList.remove('hidden');
+
+            let html = '';
+            let subtotal = 0;
+            let totalDiscount = 0;
+
+            cart.forEach(item => {
+                const price = (item.price || 0);
+                const discount = (item.discount || 0);
+                const discountedPrice = price * (1 - (discount / 100));
+                const itemTotal = discountedPrice * item.quantity;
+                const itemSubtotal = price * item.quantity;
+
+                subtotal += itemSubtotal;
+                totalDiscount += itemSubtotal - itemTotal;
+                
+                html += `
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between py-6">
+                        <div class="flex items-center space-x-4 mb-4 sm:mb-0 w-full sm:w-auto">
+                            <img src="${item.images[0] || 'https://placehold.co/80x80/e0f2f1/047857?text=CRSSPORA'}" 
+                                 alt="${item.name}" 
+                                 class="w-20 h-20 object-cover rounded-lg shadow-md">
+                            <div>
+                                <a href="./product.html?id=${item.id}" class="text-lg font-bold text-gray-800 hover:text-emerald-600 transition duration-150">${item.name}</a>
+                                <p class="text-sm text-gray-500">${price.toFixed(2)} TL / adet</p>
+                                ${discount > 0 ? `<p class="text-sm text-red-500 font-semibold">-%${discount} İndirim</p>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-6 w-full sm:w-auto justify-between sm:justify-start">
+                            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                <button onclick="window.updateCartQuantity('${item.id}', ${item.quantity - 1})" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 text-lg font-bold transition duration-150 rounded-l-lg border-r border-gray-300">-</button>
+                                <input type="number" value="${item.quantity}" min="1" class="quantity-input border-none focus:ring-0" readonly>
+                                <button onclick="window.updateCartQuantity('${item.id}', ${item.quantity + 1})" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 text-lg font-bold transition duration-150 rounded-r-lg border-l border-gray-300">+</button>
+                            </div>
+                            
+                            <span class="font-extrabold text-lg text-gray-900 w-24 text-right hidden sm:block">${itemTotal.toFixed(2)} TL</span>
+                            
+                            <button class="text-red-500 hover:text-red-700 transition duration-150 p-2 rounded-full" onclick="window.removeFromCart('${item.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            itemsDiv.innerHTML = html;
+            
+            // Özeti güncelle
+            document.getElementById('cart-subtotal').textContent = `${subtotal.toFixed(2)} TL`;
+            document.getElementById('cart-discount').textContent = `- ${totalDiscount.toFixed(2)} TL`;
+            document.getElementById('cart-total-price').textContent = `${getCartTotalPrice().toFixed(2)} TL`;
+
+            // Sepet boşsa butonu kilitle
+            if (cart.length === 0) {
+                 checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
+                 checkoutButton.setAttribute('href', '#');
+            } else {
+                 checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                 checkoutButton.setAttribute('href', './checkout.html');
+            }
+        }
+
     </script>
 </body>
 </html>
