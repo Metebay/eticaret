@@ -1,6 +1,6 @@
 // === E-Ticaret Sitesi Ortak JS Dosyası ===
 // Bu dosya, 7 HTML dosyasının tamamı tarafından paylaşılan
-// tüm çekirdek fonksiyonları içerir.
+// tüm çekdek fonksiyonları içerir.
 
 // --- Firebase SDK'larını import et ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
@@ -23,7 +23,8 @@ import {
     query, 
     getDocs, 
     Timestamp,
-    onSnapshot
+    onSnapshot,
+    where // <-- KATEGORİ SORGUSU İÇİN EKLENDİ
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
@@ -254,16 +255,32 @@ export function initAuthAndNav() {
 // Bu fonksiyonlar, ihtiyaç duyan HTML dosyaları tarafından import edilecek.
 
 // --- index.html ---
-export async function loadIndexPage(productListDiv) {
+// Kategori filtrelemesi için fonksiyon imzası güncellendi (category = null)
+export async function loadIndexPage(productListDiv, category = null) {
     if (!productListDiv) return;
     productListDiv.innerHTML = '<div class="text-center p-4 col-span-full text-gray-500">Ürünler yükleniyor...</div>';
     
     try {
-        const q = query(productsCollection);
+        // Kategoriye göre sorgu oluşturma
+        let q;
+        if (category) {
+            // Belirli bir kategori seçildiyse filtrele
+            // !! ÖNEMLİ !! Bu sorgunun çalışması için Firestore'da 'products' koleksiyonu üzerinde
+            // 'category' alanı için bir DİZİN (INDEX) oluşturulması gerekir.
+            q = query(productsCollection, where("category", "==", category));
+        } else {
+            // Kategori seçilmediyse (veya 'Tümü' seçildiyse) tüm ürünleri getir
+            q = query(productsCollection);
+        }
+
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
-            productListDiv.innerHTML = '<div class="text-center p-4 col-span-full text-gray-500">Gösterilecek ürün bulunamadı.</div>';
+            if (category) {
+                productListDiv.innerHTML = `<div class="text-center p-4 col-span-full text-gray-500">'${category}' kategorisinde ürün bulunamadı.</div>`;
+            } else {
+                productListDiv.innerHTML = '<div class="text-center p-4 col-span-full text-gray-500">Gösterilecek ürün bulunamadı.</div>';
+            }
             return;
         }
 
@@ -289,14 +306,14 @@ export async function loadIndexPage(productListDiv) {
                         <div class="mt-3 mb-4">
                             ${discount > 0 ? `
                                 <div>
-                                    <span class="text-2xl font-bold text-indigo-600">${discountedPrice.toFixed(2)} TL</span>
+                                    <span class="text-2xl font-bold text-emerald-600">${discountedPrice.toFixed(2)} TL</span>
                                     <span class="text-sm text-gray-500 line-through ml-2">${price.toFixed(2)} TL</span>
                                 </div>
                             ` : `
-                                <span class="text-2xl font-bold text-indigo-600">${price.toFixed(2)} TL</span>
+                                <span class="text-2xl font-bold text-emerald-600">${price.toFixed(2)} TL</span>
                             `}
                         </div>
-                        <a href="product.html?id=${productId}" class="block w-full text-center bg-indigo-50 text-indigo-600 font-medium py-2 rounded-md hover:bg-indigo-100 transition-colors duration-200">
+                        <a href="product.html?id=${productId}" class="block w-full text-center bg-emerald-50 text-emerald-600 font-medium py-2 rounded-md hover:bg-emerald-100 transition-colors duration-200">
                             Detayları Gör
                         </a>
                     </div>
@@ -307,6 +324,8 @@ export async function loadIndexPage(productListDiv) {
         
     } catch (error) {
         console.error("Ürünler yüklenirken hata:", error);
+        // Önceki 'failed-precondition' kontrolü kaldırıldı, çünkü bu basit sorgu için
+        // otomatik tek alanlı dizin yeterlidir ve bu hata beklenmez.
         productListDiv.innerHTML = '<div class="text-center p-4 col-span-full text-red-500">Ürünler yüklenemedi. ' + error.message + '</div>';
     }
 }
@@ -346,7 +365,7 @@ export async function loadProductPage(id, contentDiv) {
                     imagesHtml += `
                         <img src="${imgUrl}" 
                              alt="thumbnail" 
-                             class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-gray-200 transition-all hover:border-indigo-500"
+                             class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-gray-200 transition-all hover:border-emerald-500"
                              onclick="document.getElementById('main-product-image').src='${imgUrl}'">
                     `;
                 });
@@ -369,16 +388,16 @@ export async function loadProductPage(id, contentDiv) {
                     <div class="mb-6">
                         ${discount > 0 ? `
                             <div class="flex items-baseline space-x-3">
-                                <span class="text-4xl font-bold text-indigo-600">${discountedPrice.toFixed(2)} TL</span>
+                                <span class="text-4xl font-bold text-emerald-600">${discountedPrice.toFixed(2)} TL</span>
                                 <span class="text-2xl text-gray-400 line-through">${price.toFixed(2)} TL</span>
                                 <span class="bg-red-100 text-red-600 text-sm font-medium px-2 py-1 rounded-full">%${discount} İndirim</span>
                             </div>
                         ` : `
-                            <span class="text-4xl font-bold text-indigo-600">${price.toFixed(2)} TL</span>
+                            <span class="text-4xl font-bold text-emerald-600">${price.toFixed(2)} TL</span>
                         `}
                     </div>
                     
-                    <button id="add-to-cart-button" class="w-full bg-indigo-600 text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-indigo-300">
+                    <button id="add-to-cart-button" class="w-full bg-emerald-600 text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-all duration-200 shadow-lg hover:shadow-emerald-300">
                         Sepete Ekle
                     </button>
                 </div>
@@ -490,12 +509,12 @@ export function loadCartPage() {
                 <div class="flex items-center space-x-4">
                     <img src="${item.images[0] || 'https://placehold.co/100x100'}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg shadow-sm">
                     <div>
-                        <a href="product.html?id=${item.id}" class="text-lg font-semibold text-gray-800 hover:text-indigo-600">${item.name}</a>
+                        <a href="product.html?id=${item.id}" class="text-lg font-semibold text-gray-800 hover:text-emerald-600">${item.name}</a>
                         <p class="text-sm text-gray-500">${discountedPrice.toFixed(2)} TL ${discount > 0 ? `(%${discount} indirim)` : ''}</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <input type="number" value="${item.quantity}" min="1" class="w-16 text-center border rounded-md focus:ring-1 focus:ring-indigo-500" 
+                    <input type="number" value="${item.quantity}" min="1" class="w-16 text-center border rounded-md focus:ring-1 focus:ring-emerald-500" 
                            onchange="window.updateCartQuantity('${item.id}', this.valueAsNumber)">
                     <span class="font-semibold w-24 text-right text-gray-800">${itemTotal.toFixed(2)} TL</span>
                     <button class="text-red-500 hover:text-red-700 transition-colors" onclick="window.removeFromCart('${item.id}')" title="Ürünü Sil">
@@ -774,11 +793,11 @@ function loadAdminOrders() {
             html += `
                 <div class="border p-4 rounded-lg bg-white shadow-sm">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-gray-800">Sipariş ID: <span class="font-mono text-indigo-600">${orderId.substring(0, 8)}...</span></span>
+                        <span class="font-semibold text-gray-800">Sipariş ID: <span class="font-mono text-emerald-600">${orderId.substring(0, 8)}...</span></span>
                         <span class="text-sm text-gray-500">${order.date.toDate().toLocaleString('tr-TR')}</span>
                     </div>
                     <p class="text-sm text-gray-500">Kullanıcı ID: ${order.userId}</p>
-                    <p class="font-medium mt-2">Durum: <span class="text-indigo-600 font-semibold">${order.status}</span></p>
+                    <p class="font-medium mt-2">Durum: <span class="text-emerald-600 font-semibold">${order.status}</span></p>
                     <p class="font-bold text-lg text-gray-900 mt-2">Toplam: ${order.totalPrice.toFixed(2)} TL</p>
                     <ul class="list-disc list-inside mt-2 text-sm">
                         ${itemsHtml}
