@@ -3,34 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ürün Detayı - CRSSPORA</title>
+    <title>CRSSPORA - Ürün Detayı</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        /* CRSSPORA Tema Rengi (Emerald) */
+        .text-emerald-600 { color: #059669; }
+        .bg-emerald-500 { background-color: #10b981; }
+        .hover\:bg-emerald-600:hover { background-color: #059669; }
+        .border-emerald-500 { border-color: #10b981; }
+        .focus\:ring-emerald-500:focus { --tw-ring-color: #10b981; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
 
-    <!-- Ana Navigasyon Çubuğu (common.js halleder) -->
-    <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+    <!-- Ana Navigasyon Çubuğu -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="text-2xl font-bold text-emerald-600">CRSSPORA</a>
+            <div class="flex justify-between items-center py-4">
+                <a href="./index.html" class="text-3xl font-extrabold text-emerald-600 tracking-wider">CRSSPORA</a>
                 <div class="flex items-center space-x-6">
-                    <a href="index.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Ana Sayfa</a>
-                    <a href="cart.html" class="text-gray-600 hover:text-emerald-600 transition-colors relative">
-                        Sepet
-                        <span id="cart-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
+                    <a href="./index.html" class="text-gray-600 hover:text-emerald-600 transition duration-150 font-medium" id="index-link">Ana Sayfa</a>
+                    <a href="./cart.html" class="text-gray-600 hover:text-emerald-600 relative transition duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
                     </a>
+                    
+                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
                     <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="login.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Giriş Yap</a>
-                        <a href="register.html" class="text-emerald-600 bg-emerald-100 hover:bg-emerald-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kayıt Ol</a>
+                        <a href="./login.html" class="text-gray-600 hover:text-emerald-600 transition duration-150">Giriş Yap</a>
+                        <a href="./register.html" class="text-white bg-emerald-500 hover:bg-emerald-600 px-3 py-1.5 rounded-lg shadow-md font-semibold transition duration-150">Kayıt Ol</a>
                     </div>
+                    
+                    <!-- Giriş yapıldığında görünecek linkler -->
                     <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700 hidden sm:block"></span>
-                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800 transition-colors">Admin Paneli</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-emerald-600 transition-colors text-sm font-medium">Çıkış Yap</button>
+                        <span id="user-email" class="text-sm text-gray-700 font-medium truncate max-w-[100px]"></span>
+                        <a href="./admin.html" id="admin-link" class="hidden text-red-600 font-bold hover:text-red-800 transition duration-150 border border-red-600 px-3 py-1 rounded-lg">Admin</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-red-600 transition duration-150">Çıkış Yap</button>
                     </div>
                 </div>
             </div>
@@ -38,27 +49,28 @@
     </nav>
 
     <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4 sm:px-6 lg:px-8 mt-8">
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
 
-        <!-- ===== 2. Ürün Detay Sayfası ===== -->
-        <div id="page-product">
-            <div id="product-detail-content" class="bg-white p-8 sm:p-12 rounded-lg shadow-xl max-w-5xl mx-auto">
-                <!-- Ürün detayı buraya yüklenecek -->
-            </div>
+        <div id="product-detail-content" class="bg-white p-6 md:p-10 rounded-xl shadow-2xl">
+            <!-- Ürün detayı buraya yüklenecek -->
+            <div class="text-center p-20 text-gray-500">Ürün yükleniyor...</div>
         </div>
 
     </main>
-
+    
     <!-- Hata/Bilgi Modalı -->
-    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" onclick="closeModal()">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" onclick="event.stopPropagation()">
-            <div class="mt-3 text-center">
-                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900"></h3>
-                <div class="mt-2 px-7 py-3">
+    <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[100] hidden transition-opacity" onclick="closeModal()">
+        <div class="relative top-0 mx-4 p-6 border w-full max-w-sm shadow-2xl rounded-xl bg-white transform transition-all duration-300 scale-100" onclick="event.stopPropagation()">
+            <div class="mt-2 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 mb-4">
+                    <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 id="modal-title" class="text-xl leading-6 font-bold text-gray-900">Başlık</h3>
+                <div class="mt-4 px-1 py-1">
                     <p id="modal-message" class="text-sm text-gray-500"></p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-300" onclick="closeModal()">
+                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-500 text-white text-base font-semibold rounded-lg w-full shadow-md hover:bg-emerald-600 transition duration-150" onclick="closeModal()">
                         Kapat
                     </button>
                 </div>
@@ -66,37 +78,131 @@
         </div>
     </div>
 
-
-    <!-- Sadece bu sayfaya özel JS -->
+    <!-- JavaScript Mantığı -->
     <script type="module">
-        // Ortak fonksiyonları import et
         import { 
-            db, 
+            initAuthAndNav, 
             productsCollection, 
-            showModal, 
-            updateCartCount, 
-            initAuthAndNav,
-            loadProductPage
+            getDoc, 
+            doc,
+            addToCart,
+            showModal
         } from './common.js';
 
-        // Sayfa yüklendiğinde
-        window.addEventListener('DOMContentLoaded', () => {
-            initAuthAndNav();   // Navigasyon ve Auth durumunu başlat
-            updateCartCount();  // Sepet sayısını güncelle
-            
-            // URL'den ürün ID'sini al (örn: product.html?id=ABC)
+        // Sayfa kimliğini tanımla
+        const PAGE_ID = 'product';
+
+        window.onload = async () => {
+            await initAuthAndNav(PAGE_ID);
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
-            const contentDiv = document.getElementById('product-detail-content');
             
-            if (productId) {
-                loadProductPage(productId, contentDiv);
-            } else {
-                contentDiv.innerHTML = '<div class="text-center p-10 text-red-500">Ürün ID bulunamadı.</div>';
-                setTimeout(() => window.location.href = 'index.html', 2000);
+            if (!productId) {
+                showModal("Hata", "Ürün ID'si bulunamadı.");
+                window.location.href = './index.html';
+                return;
             }
-        });
-        
+            await loadProductPage(productId);
+        };
+
+        /**
+         * Ürün detaylarını Firestore'dan çeker ve sayfaya basar.
+         * @param {string} id - Ürün ID'si
+         */
+        async function loadProductPage(id) {
+            const contentDiv = document.getElementById('product-detail-content');
+            contentDiv.innerHTML = '<div class="text-center p-20 text-gray-500">Ürün yükleniyor...</div>';
+            
+            try {
+                const docRef = doc(productsCollection, id);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    contentDiv.innerHTML = '<div class="text-center p-20 text-red-500">Ürün bulunamadı.</div>';
+                    return;
+                }
+
+                const product = docSnap.data();
+                const productId = docSnap.id;
+                const price = (product.price || 0);
+                const discount = (product.discount || 0);
+                const discountedPrice = price * (1 - (discount / 100));
+
+                // Resim galerisi oluştur
+                let imagesHtml = '';
+                if (product.images && product.images.length > 0) {
+                    // Ana resim (Kullanıcı etkileşimli)
+                    imagesHtml += `<img id="main-product-image" src="${product.images[0]}" alt="${product.name}" class="w-full h-80 md:h-[400px] object-contain rounded-xl mb-4 bg-gray-100 shadow-inner transition-opacity duration-500" onerror="this.src='https://placehold.co/600x400/e0f2f1/047857?text=CRSSPORA'">`;
+                    
+                    // Küçük resimler (varsa)
+                    if (product.images.length > 1) {
+                        imagesHtml += '<div class="flex space-x-3 overflow-x-auto p-1">';
+                        product.images.forEach(imgUrl => {
+                            imagesHtml += `
+                                <img src="${imgUrl}" 
+                                     alt="thumbnail" 
+                                     class="w-16 h-16 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-emerald-500 transition duration-150"
+                                     onclick="document.getElementById('main-product-image').src='${imgUrl}'"
+                                     onerror="this.src='https://placehold.co/100x100/e0f2f1/047857?text=!'">
+                            `;
+                        });
+                        imagesHtml += '</div>';
+                    }
+                } else {
+                    imagesHtml = `<img src="https://placehold.co/600x400/e0f2f1/047857?text=CRSSPORA" alt="${product.name}" class="w-full h-80 md:h-[400px] object-contain rounded-xl mb-4 bg-gray-100 shadow-inner">`;
+                }
+
+                let html = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <!-- GÖRSELLER BÖLÜMÜ -->
+                        <div class="order-1">
+                            ${imagesHtml}
+                        </div>
+                        
+                        <!-- DETAY BÖLÜMÜ -->
+                        <div class="order-2">
+                            <span class="text-sm font-semibold tracking-wider text-gray-500 uppercase">${product.category}</span>
+                            <h1 class="text-5xl font-extrabold text-gray-900 mt-2 mb-6">${product.name}</h1>
+                            
+                            <div class="mb-8 p-4 bg-emerald-50 rounded-lg">
+                                ${discount > 0 ? `
+                                    <div class="flex items-end space-x-3">
+                                        <span class="text-5xl font-extrabold text-red-600">${discountedPrice.toFixed(2)} TL</span>
+                                        <span class="text-2xl text-gray-500 line-through">${price.toFixed(2)} TL</span>
+                                        <span class="bg-red-600 text-white text-md font-bold px-3 py-1 rounded-full">%${discount}</span>
+                                    </div>
+                                ` : `
+                                    <span class="text-5xl font-extrabold text-emerald-600">${price.toFixed(2)} TL</span>
+                                `}
+                            </div>
+                            
+                            <h2 class="text-2xl font-bold text-gray-800 mb-3 border-b pb-1">Ürün Açıklaması</h2>
+                            <p class="text-lg text-gray-600 mb-8 leading-relaxed">${product.description}</p>
+                            
+                            <button id="add-to-cart-button" class="w-full bg-emerald-500 text-white py-4 px-6 rounded-xl text-xl font-bold hover:bg-emerald-600 transition duration-300 shadow-lg hover:shadow-xl">
+                                Sepete Ekle
+                            </button>
+                        </div>
+                    </div>
+                `;
+                contentDiv.innerHTML = html;
+                
+                // Sepete Ekle butonuna olay dinleyici ekle
+                document.getElementById('add-to-cart-button').addEventListener('click', () => {
+                    const finalProduct = {
+                        ...product,
+                        price: price, // Orijinal fiyatı sakla
+                        discount: discount, // İndirimi sakla
+                        paytrLink: product.paytrLink || null // PayTR linkini sakla
+                    };
+                    addToCart(productId, finalProduct);
+                });
+
+            } catch (error) {
+                console.error("Ürün detayı yüklenirken hata:", error);
+                contentDiv.innerHTML = '<div class="text-center p-20 text-red-500">Ürün yüklenemedi.</div>';
+            }
+        }
     </script>
 </body>
 </html>
