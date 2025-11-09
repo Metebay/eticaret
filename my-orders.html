@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siparişlerim - PAFA TEAMSPORT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="./assets/PAFA TEAMSPORT LOGO.png" type="image/x-icon">
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <!-- Header Yükleme Alanı -->
+    <div id="header-placeholder"></div>
+
+    <main class="container mx-auto px-6 py-8 min-h-screen">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Siparişlerim</h1>
+
+        <div id="orders-list" class="grid gap-6">
+            <!-- Siparişler buraya yüklenecek -->
+            <div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-600">
+                <p>Yükleniyor...</p>
+            </div>
+        </div>
+
+        <!-- Mesaj Modalı (common.js tarafından kontrol edilir) -->
+        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-8 shadow-xl max-w-sm w-full">
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h3>
+                <p id="modal-message" class="text-gray-700 mb-6"></p>
+                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-2 rounded-md hover:bg-emerald-700 transition duration-200">Tamam</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Yükleme Alanı -->
+    <div id="footer-placeholder"></div>
+
+
+    <script type="module">
+        import { 
+            loadHeaderAndFooter,
+            initAuthAndNav, 
+            currentUser, 
+            showModal, 
+            ordersCollection, 
+            query, 
+            where, 
+            getDocs 
+        } from './common.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 1. Auth durumunu kontrol et
+            await initAuthAndNav();
+            // 2. Header/Footer yükle
+            await loadHeaderAndFooter('my-orders');
+
+            // 3. Auth kontrolü sonrası sayfa içeriğini yükle
+            if (!currentUser) {
+                showModal("Giriş Gerekli", "Siparişlerinizi görmek için lütfen giriş yapın.");
+                setTimeout(() => {
+                    window.location.href = './auth.html'; // auth.html'e yönlendir
+                }, 2000);
+                return;
+            }
+
+            loadOrders();
+        });
+
+        async function loadOrders() {
+            const ordersListEl = document.getElementById('orders-list');
+            ordersListEl.innerHTML = '<div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-600"><p>Siparişler yükleniyor...</p></div>';
+
+            try {
+                // Sadece mevcut kullanıcının userId'sine sahip siparişleri çek
+                const q = query(ordersCollection, where("userId", "==", currentUser.auth.uid));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    ordersListEl.innerHTML = `
+                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                            <p class="text-gray-600 mb-4">Henüz hiç siparişiniz bulunmamaktadır.</p>
+                            <a href="./products.html" class="bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 transition duration-200">Hemen Alışverişe Başla</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                ordersListEl.innerHTML = ''; // Yükleniyor mesajını temizle
+                querySnapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const orderId = doc.id;
+                    const orderDate = order.date ? new Date(order.date.seconds * 1000).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Belirtilmemiş';
+                    const orderTime = order.date ? new Date(order.date.seconds * 1000).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '';
+                    
+                    const orderCard = `
+                        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+                            <div class="flex justify-between items-start mb-4 border-b pb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900">Sipariş ID: <span class="text-emerald-600">${orderId.substring(0, 8)}...</span></h3>
+                                    <p class="text-gray-600 text-sm mt-1">Tarih: ${orderDate} ${orderTime}</p>
+                                </div>
+                                <span class="px-3 py-1 text-sm font-semibold rounded-full 
+                                    ${order.status === 'Beklemede' ? 'bg-yellow-100 text-yellow-800' : 
+                                      order.status === 'Hazırlanıyor' ? 'bg-blue-100 text-blue-800' : 
+                                      order.status === 'Kargoda' ? 'bg-indigo-100 text-indigo-800' : 
+                                      order.status === 'Teslim Edildi' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
+                                ">
+                                    ${order.status}
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Sipariş Detayları:</h4>
+                                <ul class="space-y-2">
+                                    ${order.items.map(item => `
+                                        <li class="flex items-center space-x-3 text-gray-700">
+                                            <img src="${item.images[0] || 'https://placehold.co/50x50'}" alt="${item.name}" class="w-12 h-12 object-cover rounded-md border border-gray-200">
+                                            <span>${item.name} (x${item.quantity}) - ${(item.price * (1 - (item.discount || 0) / 100)).toFixed(2)} TL / adet</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div class="text-right border-t pt-4">
+                                <p class="text-xl font-bold text-gray-900">Toplam Tutar: <span class="text-emerald-600">${order.totalPrice.toFixed(2)} TL</span></p>
+                            </div>
+                        </div>
+                    `;
+                    ordersListEl.innerHTML += orderCard;
+                });
+
+            } catch (error) {
+                console.error("Siparişler yüklenirken hata oluştu:", error);
+                ordersListEl.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Hata!</strong>
+                        <span class="block sm:inline">Siparişleriniz yüklenirken bir sorun oluştu: ${error.message}</span>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
