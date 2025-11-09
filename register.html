@@ -4,34 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kayıt Ol - E-Ticaret Sitesi</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased">
 
     <!-- Ana Navigasyon Çubuğu -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <a href="index.html" class="text-2xl font-bold text-blue-600">E-Ticaret</a>
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="text-gray-600 hover:text-blue-600">Ana Sayfa</a>
-                    <a href="cart.html" class="text-gray-600 hover:text-blue-600 relative">
+    <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600">E-Ticaret</a>
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Ana Sayfa</a>
+                    <a href="cart.html" class="text-gray-600 hover:text-indigo-600 transition-colors relative">
                         Sepet
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                        <span id="cart-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
                     </a>
-                    
-                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
                     <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="login.html" class="text-gray-600 hover:text-blue-600">Giriş Yap</a>
-                        <a href="register.html" class="text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md">Kayıt Ol</a>
+                        <a href="login.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Giriş Yap</a>
+                        <a href="register.html" class="text-indigo-600 bg-indigo-100 hover:bg-indigo-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kayıt Ol</a>
                     </div>
-                    
-                    <!-- Giriş yapıldığında görünecek linkler -->
                     <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700"></span>
-                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800">Admin Paneli</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-blue-600">Çıkış Yap</button>
+                        <span id="user-email" class="text-sm text-gray-700 hidden sm:block"></span>
+                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800 transition-colors">Admin Paneli</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-indigo-600 transition-colors text-sm font-medium">Çıkış Yap</button>
                     </div>
                 </div>
             </div>
@@ -39,26 +38,26 @@
     </nav>
 
     <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 mt-10">
 
         <!-- ===== 4. Kayıt Sayfası ===== -->
         <div id="page-register">
-            <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
-                <h2 class="text-2xl font-bold mb-6 text-center">Kayıt Ol</h2>
-                <form id="register-form">
-                    <div class="mb-4">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-xl mt-10">
+                <h2 class="text-3xl font-bold mb-6 text-center text-gray-900">Kayıt Ol</h2>
+                <form id="register-form" class="space-y-6">
+                    <div>
                         <label for="register-name" class="block text-sm font-medium text-gray-700">Ad Soyad</label>
-                        <input type="text" id="register-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" id="register-name" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="register-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="email" id="register-email" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                    <div class="mb-6">
+                    <div>
                         <label for="register-password" class="block text-sm font-medium text-gray-700">Şifre</label>
-                        <input type="password" id="register-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="password" id="register-password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Kayıt Ol</d>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-md font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-indigo-300">Kayıt Ol</d>
                     <p id="register-error" class="text-red-500 text-sm mt-4 text-center"></p>
                 </form>
             </div>
@@ -75,7 +74,7 @@
                     <p id="modal-message" class="text-sm text-gray-500"></p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="closeModal()">
+                    <button id="modal-close-button" class="px-4 py-2 bg-indigo-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-300" onclick="closeModal()">
                         Kapat
                     </button>
                 </div>
@@ -84,173 +83,21 @@
     </div>
 
 
-    <!-- Firebase SDK - TÜM MANTIK BURADA -->
+    <!-- Sadece bu sayfaya özel JS -->
     <script type="module">
-        // Firebase SDK'larını import et
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
         import { 
-            getAuth, 
-            onAuthStateChanged, 
-            createUserWithEmailAndPassword, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            setDoc, 
-            collection
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+            auth, 
+            usersCollection,
+            showModal, 
+            updateCartCount, 
+            initAuthAndNav,
+            initRegisterPage
+        } from './common.js';
 
-        // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
-        const firebaseConfig = {
-            apiKey: "AIzaSyCcpgbcbHqMjkyxVmRllLj5ZV1yljMhsPk",
-            authDomain: "whatsapp-415e2.firebaseapp.com",
-            databaseURL: "https://whatsapp-415e2-default-rtdb.firebaseio.com",
-            projectId: "whatsapp-415e2",
-            storageBucket: "whatsapp-415e2.firebasestorage.app",
-            messagingSenderId: "632645198033",
-            appId: "1:632645198033:web:430cc6dc6671703f25a5f0",
-            measurementId: "G-52SZ74C9F4"
-        };
-        let app, auth, db, analytics;
-        let currentUser = null;
-        let usersCollection;
-
-        // Firebase'i başlat
-        try {
-            app = initializeApp(firebaseConfig);
-            analytics = getAnalytics(app);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            usersCollection = collection(db, "users");
-            console.log("Firebase başarıyla başlatıldı.");
-        } catch (error) {
-            console.error("Firebase başlatma hatası:", error);
-            showModal("Hata", "Uygulama başlatılamadı. Lütfen daha sonra tekrar deneyin.");
-        }
-
-        // === 2. MODAL (BİLDİRİM) FONKSİYONLARI ===
-        const modal = document.getElementById('message-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        function showModal(title, message) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-        window.closeModal = closeModal;
-
-        // === 3. SEPET (localStorage) FONKSİYONLARI ===
-        function getCart() {
-            return JSON.parse(localStorage.getItem('cart') || '[]');
-        }
-        function updateCartCount() {
-            const cart = getCart();
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
-        }
-
-        // === 4. KİMLİK DOĞRULAMA (AUTH) İŞLEMLERİ ===
-        onAuthStateChanged(auth, async (user) => {
-            const authLinks = document.getElementById('auth-links');
-            const userLinks = document.getElementById('user-links');
-            const adminLink = document.getElementById('admin-link');
-            const userEmailSpan = document.getElementById('user-email');
-
-            // Admin email adresini hier belirleyin
-            const ADMIN_EMAIL = 'admin@e-ticaret.com'; // <-- YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
-
-            if (user) {
-                const userDocRef = doc(usersCollection, user.uid);
-                const userDoc = await getDoc(userDocRef);
-                
-                let userData = { email: user.email }; // Varsayılan veri
-                if (userDoc.exists()) {
-                    userData = { ...userData, ...userDoc.data() };
-                }
-
-                // Rolü Firestore'dan değil, e-posta adresinden belirle
-                const userRole = (user.email === ADMIN_EMAIL) ? 'admin' : 'customer';
-
-                currentUser = { auth: user, ...userData, role: userRole };
-                
-                authLinks.style.display = 'none';
-                userLinks.style.display = 'flex';
-                userEmailSpan.textContent = currentUser.email;
-
-                if (currentUser.role === 'admin') {
-                    adminLink.style.display = 'block';
-                } else {
-                    adminLink.style.display = 'none';
-                }
-                
-                // Zaten giriş yapmışsa, register sayfasında tutma
-                if (window.location.pathname.includes('register.html')) {
-                    window.location.href = 'index.html';
-                }
-
-            } else {
-                currentUser = null;
-                authLinks.style.display = 'flex';
-                userLinks.style.display = 'none';
-                adminLink.style.display = 'none';
-                userEmailSpan.textContent = '';
-            }
-        });
-
-        document.getElementById('logout-button').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showModal("Başarılı", "Çıkış yapıldı.");
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error("Çıkış hatası:", error);
-                showModal("Hata", "Çıkış yapılamadı: " + error.message);
-            }
-        });
-
-        // === 5. SAYFAYA ÖZEL İŞLEVLER ===
-
-        // --- Kayıt Formu ---
-        const registerForm = document.getElementById('register-form');
-        if (registerForm) {
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('register-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const errorEl = document.getElementById('register-error');
-
-                try {
-                    errorEl.textContent = '';
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-
-                    await setDoc(doc(usersCollection, user.uid), {
-                        uid: user.uid,
-                        name: name,
-                        email: email,
-                        role: "customer"
-                    });
-
-                    showModal("Başarılı", "Kayıt işlemi tamamlandı. Ana sayfaya yönlendiriliyorsunuz.");
-                    window.location.href = 'index.html'; // Yönlendirme
-
-                } catch (error) {
-                    console.error("Kayıt hatası:", error);
-                    errorEl.textContent = "Kayıt başarısız oldu: " + error.message;
-                }
-            });
-        }
-        
-        // === 6. SAYFA YÜKLEME ===
         window.addEventListener('DOMContentLoaded', () => {
-            updateCartCount(); // Her sayfada sepet sayısını güncelle
+            initAuthAndNav();
+            updateCartCount();
+            initRegisterPage(); // Kayıt formu mantığını başlat
         });
         
     </script>
