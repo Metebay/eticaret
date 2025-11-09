@@ -1,9 +1,13 @@
 /**
  * Ortak JavaScript Mantığı: Firebase Bağlantısı, Sepet Fonksiyonları, Kimlik Doğrulama ve Ortak UI İşlemleri.
  * Tüm HTML sayfaları tarafından import edilir.
+ *
+ * YENİ OPTİMİZİYASYON:
+ * Bu dosya artık loadHeaderAndFooter fonksiyonunu içerir.
+ * HTML dosyaları artık header/footer kodu içermez, sadece placeholder div'ler içerir.
  */
 
-// Firebase SDK'larını import et (Bu dosya "type=module" olarak diğer HTML'lerde çağrılacaktır)
+// === 0. FIREBASE SDK IMPORTS ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
 import {
@@ -13,7 +17,6 @@ import {
     signInWithEmailAndPassword,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-// Eksik olan fonksiyonları export ediyoruz: getDocs, query, where, Timestamp, onSnapshot.
 import {
     getFirestore,
     doc,
@@ -21,12 +24,12 @@ import {
     addDoc,
     deleteDoc,
     collection,
-    query, // <-- EKLENDİ
-    getDocs, // <-- EKLENDİ
-    Timestamp, // <-- EKLENDİ
+    query,
+    getDocs,
+    Timestamp,
     getDoc,
-    where, // <-- EKLENDİ
-    onSnapshot // <-- EKLENDİ
+    where,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
@@ -43,10 +46,8 @@ const firebaseConfig = {
     measurementId: "G-52SZ74C9F4"
 };
 
-// Yeni export'lar: Firestore fonksiyonlarını dışarı aktarıyoruz
-export { getDocs, query, where, onSnapshot, Timestamp }; // <-- BURADAN DİĞER SAYFALARA AÇILIYOR
-export { doc, getDoc, setDoc, addDoc, deleteDoc, collection }; // Sadece kolaylık için eklendi
-
+// Firestore Fonksiyonlarını Dışa Aktar
+export { getDocs, query, where, onSnapshot, Timestamp, getDoc, doc, setDoc, addDoc, deleteDoc, collection };
 
 // YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
 const ADMIN_EMAIL = 'admin@e-ticaret.com';
@@ -80,12 +81,9 @@ try {
 
 } catch (error) {
     console.error("Firebase başlatma hatası:", error);
-    // UI'da hata göstermek için ortak bir mekanizma kullanılabilir.
 }
 
 // === 2. MODAL (BİLDİRİM) FONKSİYONLARI ===
-// alert() veya confirm() yerine kullanılacak.
-// Modal elementleri, her sayfada aynı ID'lerle tanımlanmalıdır.
 
 export function showModal(title, message) {
     const modal = document.getElementById('message-modal');
@@ -97,7 +95,6 @@ export function showModal(title, message) {
         modalMessage.textContent = message;
         modal.classList.remove('hidden');
     } else {
-        // Fallback: Eğer modal HTML'de yoksa konsola yaz
         console.warn(`Modal UI not found. Message: ${title} - ${message}`);
     }
 }
@@ -130,7 +127,6 @@ export function addToCart(productId, product) {
     if (existingProductIndex > -1) {
         cart[existingProductIndex].quantity += 1;
     } else {
-        // paytrLink'i de sepete kaydet
         cart.push({ ...product, id: productId, quantity: 1 });
     }
     saveCart(cart);
@@ -174,40 +170,93 @@ export function updateCartCount() {
     }
 }
 
-// === 4. HTML VE UI FONKSİYONLARI ===
+// === 4. OPTİMİZASYON: HEADER/FOOTER YÜKLEYİCİ ===
 
 /**
- * Sayfa yüklendiğinde navigasyonu ve kullanıcı durumunu günceller.
- * @param {string} currentPageId - Şu anki sayfanın ID'si (örneğin 'index', 'admin').
+ * Header ve Footer HTML'ini sayfalara enjekte eder.
+ * @param {string} currentPageId - Aktif sayfayı vurgulamak için (örn: 'index', 'cart')
  */
-export function updateNavAndAuthUI(currentPageId) {
+export async function loadHeaderAndFooter(currentPageId) {
+    const headerPlaceholder = document.getElementById('header-placeholder');
+    const footerPlaceholder = document.getElementById('footer-placeholder');
+
+    try {
+        // Eş zamanlı olarak fetch et
+        const [headerRes, footerRes] = await Promise.all([
+            fetch('./_header.html'),
+            fetch('./_footer.html')
+        ]);
+
+        if (!headerRes.ok || !footerRes.ok) {
+            throw new Error("Header/Footer yüklenemedi.");
+        }
+
+        const headerHtml = await headerRes.text();
+        const footerHtml = await footerRes.text();
+
+        // Sayfaya HTML'i bas
+        if (headerPlaceholder) headerPlaceholder.innerHTML = headerHtml;
+        if (footerPlaceholder) footerPlaceholder.innerHTML = footerHtml;
+
+        // --- Header/Footer yüklendikten SONRA çalışması gereken JS'ler ---
+
+        // 1. Scrollbar stilini enjekte et
+        injectGlobalStyles();
+
+        // 2. Hamburger menü
+        const menuButton = document.getElementById('menu-button');
+        const navMenu = document.getElementById('nav-menu');
+        if (menuButton && navMenu) {
+            menuButton.addEventListener('click', () => {
+                navMenu.classList.toggle('hidden');
+                navMenu.classList.toggle('flex');
+            });
+        }
+        
+        // 3. Auth durumuna göre UI'ı güncelle (currentUser'a göre)
+        // BU FONKSİYON ARTIK GİRİŞ YAPMA HATASINI ÇÖZER
+        updateNavAndAuthUI(currentPageId);
+
+    } catch (error) {
+        console.error("Header/Footer yükleme hatası:", error);
+        if (headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-center text-red-500'>Menü yüklenemedi.</p>";
+        if (footerPlaceholder) footerPlaceholder.innerHTML = "<p class='text-center text-red-500'>Alt bilgi yüklenemedi.</p>";
+    }
+}
+
+/**
+ * Navigasyonu ve kullanıcı durumunu günceller.
+ * (Artık loadHeaderAndFooter tarafından çağrılıyor)
+ * @param {string} currentPageId - Şu anki sayfanın ID'si
+ */
+function updateNavAndAuthUI(currentPageId) {
     const authLinks = document.getElementById('auth-links');
     const userLinks = document.getElementById('user-links');
     const adminLink = document.getElementById('admin-link');
     const userEmailSpan = document.getElementById('user-email');
     const logoutButton = document.getElementById('logout-button');
 
-    // Navigasyon linklerini vurgula
-    document.querySelectorAll('nav a').forEach(a => {
-        a.classList.remove('font-bold', 'text-emerald-600');
-        if (a.getAttribute('href').includes(currentPageId)) {
-             a.classList.add('font-bold', 'text-emerald-600');
+    // Aktif linki vurgula
+    document.querySelectorAll('nav a.nav-link').forEach(a => {
+        if (a.dataset.pageId === currentPageId) {
+            a.classList.add('font-bold', 'text-emerald-600');
+        } else {
+            a.classList.remove('font-bold', 'text-emerald-600');
         }
     });
 
-    // Auth durumunu güncelle
+    // Auth durumunu güncelle (HATANIN ÇÖZÜLDÜĞÜ YER)
     if (currentUser) {
-        authLinks.classList.add('hidden');
-        userLinks.classList.remove('hidden');
-        userLinks.classList.add('flex');
+        authLinks.style.display = 'none'; // GİRİŞ YAP BUTONUNU GİZLE
+        userLinks.style.display = 'flex'; // KULLANICI BİLGİLERİNİ GÖSTER
         userEmailSpan.textContent = currentUser.email;
 
-        // Admin linkini kontrol et (E-posta ile)
+        // Admin linkini kontrol et
         const isAdmin = currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL;
         if (isAdmin) {
-            adminLink.classList.remove('hidden');
+            adminLink.style.display = 'block';
         } else {
-            adminLink.classList.add('hidden');
+            adminLink.style.display = 'none';
         }
 
         if (logoutButton) {
@@ -217,16 +266,15 @@ export function updateNavAndAuthUI(currentPageId) {
                     showModal("Başarılı", "Çıkış yapıldı.");
                     window.location.href = './index.html';
                 } catch (error) {
-                    console.error("Çıkış hatası:", error);
                     showModal("Hata", "Çıkış yapılamadı: " + error.message);
                 }
             };
         }
 
     } else {
-        authLinks.classList.remove('hidden');
-        userLinks.classList.add('hidden');
-        userLinks.classList.remove('flex');
+        authLinks.style.display = 'flex'; // GİRİŞ YAP BUTONUNU GÖSTER
+        userLinks.style.display = 'none'; // KULLANICI BİLGİLERİNİ GİZLE
+        adminLink.style.display = 'none';
     }
     
     // Sepet sayısını güncelle
@@ -234,10 +282,92 @@ export function updateNavAndAuthUI(currentPageId) {
 }
 
 /**
- * Ürün kartı HTML'i oluşturur.
- * @param {object} product - Ürün verisi
- * @param {string} productId - Ürün Firestore ID'si
- * @returns {string} Ürün kartı HTML'i
+ * Ortak stilleri (scrollbar) dinamik olarak ekler.
+ */
+function injectGlobalStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    `;
+    document.head.appendChild(style);
+}
+
+
+// === 5. KİMLİK DOĞRULAMA ÇEKİRDEK İŞLEMLERİ (CORE AUTH) ===
+
+/**
+ * Kimlik doğrulama durumunun ilk kez yüklenmesini bekleyen Promise döner.
+ * Bu, korumalı sayfaların (admin, checkout) doğru kullanıcı bilgisini almasını sağlar.
+ */
+export function initAuthAndNav() {
+    return new Promise((resolve) => {
+        // Zaten kontrol edildiyse, tekrar dinleme
+        if (isAuthReady) {
+            resolve();
+            return;
+        }
+        
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDocRef = doc(usersCollection, user.uid);
+                const userDoc = await getDoc(userDocRef);
+                currentUser = userDoc.exists() 
+                    ? { auth: user, ...userDoc.data() } 
+                    : { auth: user, email: user.email, role: 'customer' };
+            } else {
+                currentUser = null;
+            }
+
+            isAuthReady = true;
+            unsubscribe(); // İlk yüklemeden sonra dinlemeyi bırak
+            resolve();
+        });
+    });
+}
+
+/**
+ * Yeni kullanıcı kaydı yapar.
+ */
+export async function registerUser(name, email, password) {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const isAdmin = (email.toLowerCase() === ADMIN_EMAIL);
+
+        await setDoc(doc(usersCollection, user.uid), {
+            uid: user.uid,
+            name: name,
+            email: email,
+            role: isAdmin ? "admin" : "customer"
+        });
+        return true;
+    } catch (error) {
+        console.error("Kayıt hatası:", error);
+        throw error;
+    }
+}
+
+/**
+ * Kullanıcı girişi yapar.
+ */
+export async function signInUser(email, password) {
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        return true;
+    } catch (error) {
+        console.error("Giriş hatası:", error);
+        throw error;
+    }
+}
+
+
+// === 6. FIREBASE VERİ İŞLEMLERİ ===
+
+/**
+ * Ürün kartı HTML'i oluşturur. (Ana sayfa tarafından kullanılır)
  */
 export function createProductCard(product, productId) {
     const price = (product.price || 0);
@@ -247,10 +377,10 @@ export function createProductCard(product, productId) {
     return `
         <div class="bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02]">
             <a href="./product.html?id=${productId}">
-                <img src="${product.images[0] || 'https://placehold.co/400x300/e0f2f1/047857?text=CRSSPORA'}" 
+                <img src="${product.images[0] || 'https://placehold.co/400x300/e0f2f1/047857?text=PAFA'}" 
                      alt="${product.name}" 
                      class="w-full h-56 object-cover transition-opacity duration-500"
-                     onerror="this.src='https://placehold.co/400x300/e0f2f1/047857?text=CRSSPORA'">
+                     onerror="this.src='https://placehold.co/400x300/e0f2f1/047857?text=HATA'">
             </a>
             <div class="p-5">
                 <h3 class="text-xl font-bold text-gray-900 mb-1">${product.name}</h3>
@@ -273,92 +403,8 @@ export function createProductCard(product, productId) {
     `;
 }
 
-// === 5. KİMLİK DOĞRULAMA ÇEKİRDEK İŞLEMLERİ (CORE AUTH) ===
-
-/**
- * Kimlik doğrulama durumunun ilk kez yüklenmesini bekleyen Promise döner.
- * Bu, korumalı sayfaların (admin, checkout) doğru kullanıcı bilgisini almasını sağlar.
- * @returns {Promise<void>} Auth durumunun yüklendiği zaman çözülür.
- */
-export function initAuthAndNav(currentPageId) {
-    return new Promise((resolve) => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Kullanıcı giriş yaptı
-                const userDocRef = doc(usersCollection, user.uid);
-                const userDoc = await getDoc(userDocRef);
-
-                if (userDoc.exists()) {
-                    currentUser = { auth: user, ...userDoc.data() };
-                } else {
-                    // Firestore'da kaydı olmayan kullanıcı için varsayılan
-                    currentUser = { auth: user, email: user.email, role: 'customer' };
-                }
-            } else {
-                // Kullanıcı çıkış yaptı
-                currentUser = null;
-            }
-
-            // Auth durumu hazır
-            isAuthReady = true;
-            updateNavAndAuthUI(currentPageId);
-            unsubscribe(); // İlk yüklemeden sonra dinlemeyi bırak
-            resolve();
-        });
-    });
-}
-
-/**
- * Yeni kullanıcı kaydı yapar.
- * @param {string} name 
- * @param {string} email 
- * @param {string} password 
- * @returns {Promise<boolean>} İşlem başarılıysa true
- */
-export async function registerUser(name, email, password) {
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // Admin e-postası kontrolü
-        const isAdmin = (email.toLowerCase() === ADMIN_EMAIL);
-
-        await setDoc(doc(usersCollection, user.uid), {
-            uid: user.uid,
-            name: name,
-            email: email,
-            role: isAdmin ? "admin" : "customer"
-        });
-
-        return true;
-    } catch (error) {
-        console.error("Kayıt hatası:", error);
-        throw error;
-    }
-}
-
-/**
- * Kullanıcı girişi yapar.
- * @param {string} email 
- * @param {string} password 
- * @returns {Promise<boolean>} İşlem başarılıysa true
- */
-export async function signInUser(email, password) {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        return true;
-    } catch (error) {
-        console.error("Giriş hatası:", error);
-        throw error;
-    }
-}
-
-
-// === 6. FIREBASE VERİ İŞLEMLERİ ===
-
 /**
  * Ürün ekler (Admin Paneli)
- * @param {object} productData - Ürün verisi (name, price, etc.)
  */
 export async function addProduct(productData) {
     if (!currentUser || currentUser.email.toLowerCase() !== ADMIN_EMAIL) {
@@ -374,7 +420,6 @@ export async function addProduct(productData) {
 
 /**
  * Ürün siler (Admin Paneli)
- * @param {string} productId - Silinecek ürün ID'si
  */
 export async function deleteProduct(productId) {
     if (!currentUser || currentUser.email.toLowerCase() !== ADMIN_EMAIL) {
@@ -390,8 +435,6 @@ export async function deleteProduct(productId) {
 
 /**
  * Sipariş oluşturur (Checkout)
- * @param {array} cart - Sepet içeriği
- * @param {number} totalPrice - Toplam fiyat
  */
 export async function createOrder(cart, totalPrice) {
     if (!currentUser) {
