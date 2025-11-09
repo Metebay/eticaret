@@ -3,63 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Sayfa - CRSSPORA</title>
+    <title>CRSSPORA - Ana Sayfa</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        
-        /* Kategori Filtre Butonları Stilleri */
-        .category-btn {
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px; /* pill shape */
-            font-weight: 500;
-            font-size: 0.875rem;
-            background-color: #ffffff;
-            color: #374151; /* text-gray-700 */
-            border: 1px solid #D1D5DB; /* border-gray-300 */
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .category-btn:hover {
-            background-color: #f9fafb; /* bg-gray-50 */
-            border-color: #9ca3af; /* border-gray-400 */
-        }
+        /* CRSSPORA Tema Rengi (Emerald) */
+        .text-emerald-600 { color: #059669; }
+        .bg-emerald-500 { background-color: #10b981; }
+        .hover\:bg-emerald-600:hover { background-color: #059669; }
+        .border-emerald-500 { border-color: #10b981; }
         .active-category-btn {
-            background-color: #059669; /* bg-emerald-600 */
-            color: #ffffff;
-            border-color: #059669; /* border-emerald-600 */
+            background-color: #059669;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.4), 0 2px 4px -2px rgba(5, 150, 105, 0.4);
         }
         .active-category-btn:hover {
-            background-color: #047857; /* bg-emerald-700 */
-            border-color: #047857;
+            background-color: #047857;
         }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
 
     <!-- Ana Navigasyon Çubuğu -->
-    <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+    <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="text-2xl font-bold text-emerald-600">CRSSPORA</a>
+            <div class="flex justify-between items-center py-4">
+                <a href="./index.html" class="text-3xl font-extrabold text-emerald-600 tracking-wider">CRSSPORA</a>
                 <div class="flex items-center space-x-6">
-                    <a href="index.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Ana Sayfa</a>
-                    <a href="cart.html" class="text-gray-600 hover:text-emerald-600 transition-colors relative">
-                        Sepet
-                        <span id="cart-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
+                    <a href="./index.html" class="text-gray-600 hover:text-emerald-600 transition duration-150 font-medium" id="index-link">Ana Sayfa</a>
+                    <a href="./cart.html" class="text-gray-600 hover:text-emerald-600 relative transition duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
                     </a>
                     
+                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
                     <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="login.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Giriş Yap</a>
-                        <a href="register.html" class="text-emerald-600 bg-emerald-100 hover:bg-emerald-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kayıt Ol</a>
+                        <a href="./login.html" class="text-gray-600 hover:text-emerald-600 transition duration-150">Giriş Yap</a>
+                        <a href="./register.html" class="text-white bg-emerald-500 hover:bg-emerald-600 px-3 py-1.5 rounded-lg shadow-md font-semibold transition duration-150">Kayıt Ol</a>
                     </div>
                     
+                    <!-- Giriş yapıldığında görünecek linkler -->
                     <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700 hidden sm:block"></span>
-                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800 transition-colors">Admin Paneli</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-emerald-600 transition-colors text-sm font-medium">Çıkış Yap</button>
+                        <span id="user-email" class="text-sm text-gray-700 font-medium truncate max-w-[100px]"></span>
+                        <a href="./admin.html" id="admin-link" class="hidden text-red-600 font-bold hover:text-red-800 transition duration-150 border border-red-600 px-3 py-1 rounded-lg">Admin</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-red-600 transition duration-150">Çıkış Yap</button>
                     </div>
                 </div>
             </div>
@@ -67,38 +56,36 @@
     </nav>
 
     <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4 sm:px-6 lg:px-8 mt-8">
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
 
-        <!-- ===== 1. Ana Sayfa (Ürün Listesi) ===== -->
-        <div id="page-index">
-            <h1 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">Tüm Ürünler</h1>
-            
-            <!-- YENİ: Kategori Filtre Çubuğu -->
-            <div id="category-filter" class="flex space-x-2 mb-8 overflow-x-auto pb-2">
-                <button data-category="Tümü" class="category-btn active-category-btn">Tümü</button>
-                <button data-category="Forma" class="category-btn">Forma</button>
-                <button data-category="Ayakkabı" class="category-btn">Ayakkabı</button>
-                <button data-category="Aksesuar" class="category-btn">Aksesuar</button>
-                <button data-category="Ekipman" class="category-btn">Ekipman</button>
-            </div>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-6 border-b-2 border-emerald-500 pb-2">Ürün Kataloğu</h1>
+        
+        <!-- Kategori Filtresi -->
+        <div id="category-filter" class="flex flex-wrap gap-3 mb-8 p-3 bg-white rounded-xl shadow-inner">
+            <!-- Dinamik Kategori Butonları buraya eklenecek -->
+        </div>
 
-            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Ürünler buraya yüklenecek -->
-            </div>
+        <!-- Ürün Listesi -->
+        <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Ürünler buraya yüklenecek -->
+            <div class="text-center p-8 col-span-full text-gray-500">Ürünler yükleniyor...</div>
         </div>
 
     </main>
-
+    
     <!-- Hata/Bilgi Modalı -->
-    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" onclick="closeModal()">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" onclick="event.stopPropagation()">
-            <div class="mt-3 text-center">
-                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900"></h3>
-                <div class="mt-2 px-7 py-3">
+    <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[100] hidden transition-opacity" onclick="closeModal()">
+        <div class="relative top-0 mx-4 p-6 border w-full max-w-sm shadow-2xl rounded-xl bg-white transform transition-all duration-300 scale-100" onclick="event.stopPropagation()">
+            <div class="mt-2 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 mb-4">
+                    <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 id="modal-title" class="text-xl leading-6 font-bold text-gray-900">Başlık</h3>
+                <div class="mt-4 px-1 py-1">
                     <p id="modal-message" class="text-sm text-gray-500"></p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-300" onclick="closeModal()">
+                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-500 text-white text-base font-semibold rounded-lg w-full shadow-md hover:bg-emerald-600 transition duration-150" onclick="closeModal()">
                         Kapat
                     </button>
                 </div>
@@ -107,61 +94,94 @@
     </div>
 
 
-    <!-- Sadece bu sayfaya özel JS -->
+    <!-- JavaScript Mantığı -->
     <script type="module">
-        // Ortak fonksiyonları import et
         import { 
-            db, 
+            initAuthAndNav, 
             productsCollection, 
-            showModal, 
-            updateCartCount, 
-            initAuthAndNav,
-            loadIndexPage
+            getDocs, 
+            query,
+            createProductCard,
+            CATEGORIES
         } from './common.js';
 
-        // Kategori filtrelemesini yöneten fonksiyon
-        function setupCategoryFilters() {
-            const filterContainer = document.getElementById('category-filter');
-            const productListDiv = document.getElementById('product-list');
-            
-            if (!filterContainer) return;
+        // Sayfa kimliğini tanımla
+        const PAGE_ID = 'index';
 
-            filterContainer.addEventListener('click', (e) => {
-                // Sadece BUTTON elemanlarına tıklamayı dinle
-                if (e.target.tagName === 'BUTTON') {
-                    // Önce tüm butonlardan 'active' sınıfını kaldır
-                    filterContainer.querySelectorAll('.category-btn').forEach(btn => {
-                        btn.classList.remove('active-category-btn');
-                    });
-                    
-                    // Tıklanan butona 'active' sınıfını ekle
-                    e.target.classList.add('active-category-btn');
-                    
-                    // Butonun 'data-category' özelliğinden kategori adını al
-                    let category = e.target.dataset.category;
-                    
-                    // Eğer 'Tümü' tıklandıysa, filtreyi kaldır (null gönder)
-                    if (category === 'Tümü') {
-                        category = null;
-                    }
-                    
-                    // Ürünleri yeni kategoriye göre yeniden yükle
-                    loadIndexPage(productListDiv, category);
+        // Sayfa yüklendiğinde (auth hazır olduktan sonra)
+        window.onload = async () => {
+            await initAuthAndNav(PAGE_ID);
+            
+            // Query string'den seçili kategoriyi al
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedCategory = urlParams.get('category') || 'all';
+
+            await loadIndexPage(selectedCategory);
+            renderCategoryFilter(selectedCategory);
+        };
+
+        /**
+         * Ürünleri Firestore'dan çeker ve listeler.
+         * @param {string} category - Filtreleme yapılacak kategori adı. 'all' ise tüm ürünler.
+         */
+        async function loadIndexPage(category = 'all') {
+            const productListDiv = document.getElementById('product-list');
+            productListDiv.innerHTML = '<div class="text-center p-8 col-span-full text-gray-500">Ürünler yükleniyor...</div>';
+            
+            try {
+                let q;
+                if (category === 'all') {
+                    q = query(productsCollection);
+                } else {
+                    // Tek alanlı dizin (single-field index) gereklidir!
+                    q = query(productsCollection, where("category", "==", category));
                 }
-            });
+
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    productListDiv.innerHTML = `
+                        <div class="text-center p-8 col-span-full text-gray-500">
+                            '${CATEGORIES.find(c => c.value === category)?.label || category}' kategorisinde ürün bulunamadı.
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    html += createProductCard(doc.data(), doc.id);
+                });
+                productListDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error("Ürünler yüklenirken hata:", error);
+                productListDiv.innerHTML = '<div class="text-center p-8 col-span-full text-red-500">Ürünler yüklenemedi. Yetki veya Dizim (Index) hatası olabilir.</div>';
+            }
         }
 
-        // Sayfa yüklendiğinde
-        window.addEventListener('DOMContentLoaded', () => {
-            initAuthAndNav();   // Navigasyon ve Auth durumunu başlat
-            updateCartCount();  // Sepet sayısını güncelle
-            
-            const productListDiv = document.getElementById('product-list');
-            loadIndexPage(productListDiv, null); // Ana sayfa ürünlerini yükle (başlangıçta filtresiz)
-            
-            setupCategoryFilters(); // Kategori filtre butonlarını etkinleştir
-        });
-        
+        /**
+         * Kategori filtre butonlarını oluşturur.
+         * @param {string} activeCategory - Aktif olan kategori ID'si.
+         */
+        function renderCategoryFilter(activeCategory) {
+            const filterDiv = document.getElementById('category-filter');
+            let html = '';
+
+            CATEGORIES.forEach(cat => {
+                const isActive = cat.value === activeCategory ? ' active-category-btn' : ' bg-gray-100 text-gray-700 hover:bg-gray-200';
+                
+                html += `
+                    <a href="?category=${cat.value}" 
+                       class="px-5 py-2 rounded-full font-semibold transition duration-150 ${isActive}">
+                        ${cat.label}
+                    </a>
+                `;
+            });
+
+            filterDiv.innerHTML = html;
+        }
+
     </script>
 </body>
 </html>
