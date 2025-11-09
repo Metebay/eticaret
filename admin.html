@@ -3,35 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Paneli - E-Ticaret Sitesi</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Admin Paneli - CRSSPORA</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased">
 
     <!-- Ana Navigasyon Çubuğu -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <a href="index.html" class="text-2xl font-bold text-blue-600">E-Ticaret</a>
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="text-gray-600 hover:text-blue-600">Ana Sayfa</a>
-                    <a href="cart.html" class="text-gray-600 hover:text-blue-600 relative">
+    <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="text-2xl font-bold text-emerald-600">CRSSPORA</a>
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Ana Sayfa</a>
+                    <a href="cart.html" class="text-gray-600 hover:text-emerald-600 transition-colors relative">
                         Sepet
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                        <span id="cart-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
                     </a>
-                    
-                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
                     <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="login.html" class="text-gray-600 hover:text-blue-600">Giriş Yap</a>
-                        <a href="register.html" class="text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md">Kayıt Ol</a>
+                        <a href="login.html" class="text-gray-600 hover:text-emerald-600 transition-colors">Giriş Yap</a>
+                        <a href="register.html" class="text-emerald-600 bg-emerald-100 hover:bg-emerald-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kayıt Ol</a>
                     </div>
-                    
-                    <!-- Giriş yapıldığında görünecek linkler -->
                     <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700"></span>
-                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800">Admin Paneli</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-blue-600">Çıkış Yap</button>
+                        <span id="user-email" class="text-sm text-gray-700 hidden sm:block"></span>
+                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800 transition-colors">Admin Paneli</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-emerald-600 transition-colors text-sm font-medium">Çıkış Yap</button>
                     </div>
                 </div>
             </div>
@@ -39,420 +38,34 @@
     </nav>
 
     <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 sm:px-6 lg:px-8 mt-8">
 
         <!-- ===== 7. Admin Paneli ===== -->
         <div id="page-admin">
-            <h1 class="text-3xl font-bold mb-6">Admin Paneli</h1>
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Admin Paneli</h1>
             
-            <!-- Admin içeriği (sadece admin rolü görebilir) -->
-            <div id="admin-content" class="hidden space-y-8">
+            <!-- Admin içeriği (grid düzeni) -->
+            <div id="admin-content" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- Ürün Ekleme Formu -->
-                <section class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-4">Yeni Ürün Ekle</h2>
+                <!-- Sütun 1: Ürün Ekleme Formu -->
+                <section class="bg-white p-6 rounded-lg shadow-xl lg:col-span-1">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-900">Yeni Ürün Ekle</h2>
                     <form id="admin-add-product-form" class="space-y-4">
-                        <div>
-                            <label for="admin-product-name" class="block text-sm font-medium text-gray-700">Ürün Adı</label>
-                            <input type="text" id="admin-product-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label for="admin-product-price" class="block text-sm font-medium text-gray-700">Fiyat (TL)</label>
-                            <input type="number" id="admin-product-price" step="0.01" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
+<!-- ... existing code ...
                         <div>
                             <label for="admin-product-description" class="block text-sm font-medium text-gray-700">Açıklama</label>
-                            <textarea id="admin-product-description" rows="3" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                            <textarea id="admin-product-description" rows="3" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"></textarea>
                         </div>
+-->
+                        <!-- GÜNCELLENDİ: Text input yerine Select (açılır liste) kullanıldı -->
                         <div>
                             <label for="admin-product-category" class="block text-sm font-medium text-gray-700">Kategori</label>
-                            <input type="text" id="admin-product-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <select id="admin-product-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
+                                <option value="Forma">Forma</option>
+                                <option value="Ayakkabı">Ayakkabı</option>
+                                <option value="Aksesuar">Aksesuar</option>
+                                <option value="Ekipman">Ekipman</option>
+                            </select>
                         </div>
                         <div>
-                            <label for="admin-product-discount" class="block text-sm font-medium text-gray-700">İndirim (%)</label>
-                            <input type="number" id="admin-product-discount" value="0" min="0" max="100" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label for="admin-product-images" class="block text-sm font-medium text-gray-700">Resim Linkleri (Virgülle ayırın)</label>
-                            <input type="text" id="admin-product-images" placeholder="https://hizliresim.com/link1, https://hizliresim.com/link2" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <!-- YENİ ALAN: PayTR Linki -->
-                        <div>
-                            <label for="admin-product-paytr-link" class="block text-sm font-medium text-gray-700">PayTR Ödeme Linki (Opsiyonel)</label>
-                            <input type="text" id="admin-product-paytr-link" placeholder="https://www.paytr.com/link/..." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <!-- Bitiş: YENİ ALAN -->
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Ürünü Kaydet</button>
-                        <p id="admin-product-message" class="text-green-600 text-sm mt-2 text-center"></p>
-                    </form>
-                </section>
-
-                <!-- Ürünleri Yönet -->
-                <section class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-4">Ürünleri Yönet</h2>
-                    <div id="admin-product-list" class="divide-y divide-gray-200">
-                        <!-- Admin ürün listesi buraya yüklenecek -->
-                        Yükleniyor...
-                    </div>
-                </section>
-
-                <!-- Siparişleri Görüntüle -->
-                <section class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-4">Gelen Siparişler</h2>
-                    <div id="admin-order-list" class="space-y-4">
-                        <!-- Admin sipariş listesi buraya yüklenecek -->
-                        Yükleniyor...
-                    </div>
-                </section>
-            </div>
-            
-            <!-- Yetkisiz Erişim Mesajı -->
-            <div id="admin-unauthorized" class="hidden text-center text-red-600 font-medium bg-white p-8 rounded-lg shadow-md">
-                Bu sayfayı görüntülemek için 'admin' yetkisine sahip olmalısınız.
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Hata/Bilgi Modalı -->
-    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" onclick="closeModal()">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" onclick="event.stopPropagation()">
-            <div class="mt-3 text-center">
-                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900"></h3>
-                <div class="mt-2 px-7 py-3">
-                    <p id="modal-message" class="text-sm text-gray-500"></p>
-                </div>
-                <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="closeModal()">
-                        Kapat
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Firebase SDK - TÜM MANTIK BURADA -->
-    <script type="module">
-        // Firebase SDK'larını import et
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            addDoc, 
-            deleteDoc, 
-            collection, 
-            query, 
-            getDocs, 
-            Timestamp,
-            onSnapshot // Canlı güncellemeler için
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-        // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
-        const firebaseConfig = {
-            apiKey: "AIzaSyCcpgbcbHqMjkyxVmRllLj5ZV1yljMhsPk",
-            authDomain: "whatsapp-415e2.firebaseapp.com",
-            databaseURL: "https://whatsapp-415e2-default-rtdb.firebaseio.com",
-            projectId: "whatsapp-415e2",
-            storageBucket: "whatsapp-415e2.firebasestorage.app",
-            messagingSenderId: "632645198033",
-            appId: "1:632645198033:web:430cc6dc6671703f25a5f0",
-            measurementId: "G-52SZ74C9F4"
-        };
-        let app, auth, db, analytics;
-        let currentUser = null; 
-        let productsCollection, ordersCollection, usersCollection;
-
-        // Firebase'i başlat
-        try {
-            app = initializeApp(firebaseConfig);
-            analytics = getAnalytics(app);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            productsCollection = collection(db, "products");
-            ordersCollection = collection(db, "orders");
-            usersCollection = collection(db, "users");
-            
-            console.log("Firebase başarıyla başlatıldı.");
-        } catch (error) {
-            console.error("Firebase başlatma hatası:", error);
-            showModal("Hata", "Uygulama başlatılamadı. Lütfen daha sonra tekrar deneyin.");
-        }
-
-        // === 2. MODAL (BİLDİRİM) FONKSİYONLARI ===
-        const modal = document.getElementById('message-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        function showModal(title, message) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-        window.closeModal = closeModal;
-
-
-        // === 3. SEPET (localStorage) FONKSİYONLARI ===
-        function getCart() {
-            return JSON.parse(localStorage.getItem('cart') || '[]');
-        }
-        function updateCartCount() {
-            const cart = getCart();
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
-        }
-
-        // === 4. KİMLİK DOĞRULAMA (AUTH) İŞLEMLERİ ===
-        onAuthStateChanged(auth, async (user) => {
-            const authLinks = document.getElementById('auth-links');
-            const userLinks = document.getElementById('user-links');
-            const adminLink = document.getElementById('admin-link');
-            const userEmailSpan = document.getElementById('user-email');
-
-            // Admin email adresini hier belirleyin
-            const ADMIN_EMAIL = 'admin@e-ticaret.com'; // <-- YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
-
-            if (user) {
-                const userDocRef = doc(usersCollection, user.uid);
-                const userDoc = await getDoc(userDocRef);
-
-                let userData = { email: user.email }; // Varsayılan veri
-                if (userDoc.exists()) {
-                    userData = { ...userData, ...userDoc.data() };
-                }
-
-                // Rolü Firestore'dan değil, e-posta adresinden belirle
-                const userRole = (user.email === ADMIN_EMAIL) ? 'admin' : 'customer';
-
-                currentUser = { auth: user, ...userData, role: userRole };
-                
-                authLinks.style.display = 'none';
-                userLinks.style.display = 'flex';
-                userEmailSpan.textContent = currentUser.email;
-
-                if (currentUser.role === 'admin') {
-                    adminLink.style.display = 'block';
-                    loadAdminPage(); // Admin ise admin panelini yükle
-                } else {
-                    adminLink.style.display = 'none';
-                    // Admin değilse, admin panelini gösterme
-                     loadAdminPage(); // Bu fonksiyon yetki kontrolü yapacak
-                }
-
-            } else {
-                currentUser = null;
-                authLinks.style.display = 'flex';
-                userLinks.style.display = 'none';
-                adminLink.style.display = 'none';
-                userEmailSpan.textContent = '';
-                
-                // Admin sayfası için giriş zorunlu
-                loadAdminPage(); // Bu fonksiyon yetki kontrolü yapacak
-            }
-        });
-
-        document.getElementById('logout-button').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showModal("Başarılı", "Çıkış yapıldı.");
-                window.location.href = './index.html'; 
-            } catch (error) {
-                console.error("Çıkış hatası:", error);
-                showModal("Hata", "Çıkış yapılamadı: " + error.message);
-            }
-        });
-
-
-        // === 5. SAYFAYA ÖZEL İŞLEVLER (ADMIN) ===
-
-        // --- Admin Paneli ---
-        async function loadAdminPage() {
-            const adminContent = document.getElementById('admin-content');
-            const unauthorizedDiv = document.getElementById('admin-unauthorized');
-            
-            // Yetki kontrolü (currentUser onAuthStateChanged'de set edilir)
-            if (!currentUser || currentUser.role !== 'admin') {
-                adminContent.style.display = 'none';
-                unauthorizedDiv.style.display = 'block';
-                // Admin değilse, index'e yönlendir
-                 if (currentUser && currentUser.role !== 'admin') {
-                    showModal("Yetki Hata", "Bu sayfaya erişim yetkiniz yok.");
-                    window.location.href = './index.html';
-                 }
-                 // Giriş yapmamışsa login'e yönlendir
-                 if (!currentUser) {
-                     window.location.href = './login.html';
-                 }
-                return;
-            }
-
-            adminContent.style.display = 'block';
-            unauthorizedDiv.style.display = 'none';
-            
-            loadAdminProducts();
-            loadAdminOrders();
-        }
-
-        // Admin Ürün Ekleme Formu
-        document.getElementById('admin-add-product-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!currentUser || currentUser.role !== 'admin') {
-                showModal("Hata", "Yetkisiz işlem.");
-                return;
-            }
-
-            const name = document.getElementById('admin-product-name').value;
-            const price = parseFloat(document.getElementById('admin-product-price').value);
-            const description = document.getElementById('admin-product-description').value;
-            const category = document.getElementById('admin-product-category').value;
-            const discount = parseInt(document.getElementById('admin-product-discount').value, 10);
-            const imageLinks = document.getElementById('admin-product-images').value;
-            // YENİ: PayTR linkini al
-            const paytrLink = document.getElementById('admin-product-paytr-link').value;
-            
-            const images = imageLinks.split(',').map(link => link.trim()).filter(link => link.length > 0);
-
-            const messageEl = document.getElementById('admin-product-message');
-
-            try {
-                await addDoc(productsCollection, {
-                    name,
-                    price,
-                    description,
-                    category,
-                    discount,
-                    images,
-                    paytrLink: paytrLink || "" // YENİ: Linki veritabanına ekle
-                });
-                
-                messageEl.textContent = "Ürün başarıyla eklendi!";
-                document.getElementById('admin-add-product-form').reset();
-                
-            } catch (error) {
-                console.error("Ürün ekleme hatası:", error);
-                messageEl.textContent = "Ürün eklenemedi: " + error.message;
-            }
-        });
-
-        // Admin Ürün Listesi Yükleyici (Canlı)
-        function loadAdminProducts() {
-            const productListDiv = document.getElementById('admin-product-list');
-            
-            const q = query(productsCollection);
-            onSnapshot(q, (querySnapshot) => {
-                if (querySnapshot.empty) {
-                    productListDiv.innerHTML = '<p class="text-gray-500">Henüz ürün eklenmemiş.</p>';
-                    return;
-                }
-                
-                let html = '';
-                querySnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    const productId = doc.id;
-                    html += `
-                        <div class="flex items-center justify-between py-3">
-                            <div class="flex items-center space-x-3">
-                                <img src="${product.images[0] || 'https://placehold.co/50x50'}" alt="${product.name}" class="w-12 h-12 object-cover rounded">
-                                <div>
-                                    <p class="font-medium">${product.name}</p>
-                                    <p class="text-sm text-gray-500">${product.price.toFixed(2)} TL - %${product.discount} indirim</p>
-                                </div>
-                            </div>
-                            <button class="text-white bg-red-500 px-3 py-1 rounded hover:bg-red-600" onclick="window.deleteProduct('${productId}')">
-                                Sil
-                            </button>
-                        </div>
-                    `;
-                });
-                productListDiv.innerHTML = html;
-                
-            }, (error) => {
-                console.error("Admin ürünleri dinleme hatası:", error);
-                productListDiv.innerHTML = '<p class="text-red-500">Ürünler yüklenemedi.</p>';
-            });
-        }
-        
-        // Ürün Silme Fonksiyonu
-        window.deleteProduct = async (id) => {
-            if (!currentUser || currentUser.role !== 'admin') {
-                showModal("Hata", "Yetkisiz işlem.");
-                return;
-            }
-            
-            // Gerçek bir uygulamada burada "Emin misiniz?" modalı gösterilmeli.
-            // Biz şimdilik direkt siliyoruz.
-            try {
-                await deleteDoc(doc(productsCollection, id));
-                showModal("Başarılı", "Ürün silindi.");
-            } catch (error) {
-                console.error("Ürün silme hatası:", error);
-                showModal("Hata", "Ürün silinemedi: " + error.message);
-            }
-        }
-        
-        // Admin Sipariş Listesi Yükleyici (Canlı)
-        function loadAdminOrders() {
-            const orderListDiv = document.getElementById('admin-order-list');
-            
-            const q = query(ordersCollection);
-            onSnapshot(q, (querySnapshot) => {
-                if (querySnapshot.empty) {
-                    orderListDiv.innerHTML = '<p class="text-gray-500">Henüz sipariş yok.</p>';
-                    return;
-                }
-                
-                let html = '';
-                querySnapshot.forEach((doc) => {
-                    const order = doc.data();
-                    const orderId = doc.id;
-                    
-                    let itemsHtml = order.items.map(item => `
-                        <li class->- ${item.name} (x${item.quantity})</li>
-                    `).join('');
-
-                    html += `
-                        <div class="border p-4 rounded-md">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-lg">Sipariş ID: ${orderId}</span>
-                                <span class="text-sm text-gray-600">${order.date.toDate().toLocaleString('tr-TR')}</span>
-                            </div>
-                            <p class="text-sm text-gray-700">Kullanıcı ID: ${order.userId}</p>
-                            <p class="font-medium mt-2">Durum: <span class="text-blue-600">${order.status}</span></p>
-                            <p class="font-bold text-lg mt-2">Toplam: ${order.totalPrice.toFixed(2)} TL</p>
-                            <ul class="list-disc list-inside mt-2 text-sm text-gray-600">
-                                ${itemsHtml}
-                            </ul>
-                        </div>
-                    `;
-                });
-                orderListDiv.innerHTML = html;
-                
-            }, (error) => {
-                console.error("Admin siparişleri dinleme hatası:", error);
-                orderListDiv.innerHTML = '<p class="text-red-500">Siparişler yüklenemedi.</p>';
-            });
-        }
-        
-        // === 6. SAYFA YÜKLEME ===
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            updateCartCount(); // Her sayfada sepet sayısını güncelle
-            // Not: loadAdminPage() fonksiyonu, onAuthStateChanged
-            // dinleyicisi tarafından tetiklenecek.
-        });
-        
-    </script>
-</body>
-</html>
+<!-- ... existing code ...
