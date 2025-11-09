@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Onayı - E-Ticaret Sitesi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+
+    <!-- Ana Navigasyon Çubuğu -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="index.html" class="text-2xl font-bold text-blue-600">E-Ticaret</a>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-blue-600">Ana Sayfa</a>
+                    <a href="cart.html" class="text-gray-600 hover:text-blue-600 relative">
+                        Sepet
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                    
+                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
+                    <div id="auth-links" class="flex items-center space-x-4">
+                        <a href="login.html" class="text-gray-600 hover:text-blue-600">Giriş Yap</a>
+                        <a href="register.html" class="text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md">Kayıt Ol</a>
+                    </div>
+                    
+                    <!-- Giriş yapıldığında görünecek linkler -->
+                    <div id="user-links" class="hidden items-center space-x-4">
+                        <span id="user-email" class="text-sm text-gray-700"></span>
+                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800">Admin Paneli</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-blue-600">Çıkış Yap</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sayfa Konteyneri -->
+    <main class="container mx-auto p-4">
+
+        <!-- ===== 6. Sipariş Onay Sayfası ===== -->
+        <div id="page-checkout">
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
+                <h2 class="text-2xl font-bold mb-6 text-center">Siparişi Tamamla</h2>
+                <div id="checkout-summary" class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Sipariş Özeti</h3>
+                    <div id="checkout-items" class="divide-y divide-gray-200"></div>
+                    <div class="flex justify-between items-center font-bold text-xl mt-4 pt-4 border-t">
+                        <span>Genel Toplam:</span>
+                        <span id="checkout-total-price">0.00 TL</span>
+                    </div>
+                </div>
+                <button id="confirm-order-button" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Siparişi Onayla ve Bitir</button>
+                <div id="checkout-message" class="text-green-600 text-sm mt-4 text-center"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Hata/Bilgi Modalı -->
+    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" onclick="closeModal()">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" onclick="event.stopPropagation()">
+            <div class="mt-3 text-center">
+                <h3 id="modal-title" class="text-lg leading-6 font-medium text-gray-900"></h3>
+                <div class="mt-2 px-7 py-3">
+                    <p id="modal-message" class="text-sm text-gray-500"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="modal-close-button" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="closeModal()">
+                        Kapat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Firebase SDK - TÜM MANTIK BURADA -->
+    <script type="module">
+        // Firebase SDK'larını import et
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            addDoc,
+            collection, 
+            Timestamp
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+        // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcSsRPlvHQ6zSy9ntbVfSh8BzzmgbIWtY",
+            authDomain: "eticaret-1c9f6.firebaseapp.com",
+            projectId: "eticaret-1c9f6",
+            storageBucket: "eticaret-1c9f6.firebasestorage.app",
+            messagingSenderId: "450991125023",
+            appId: "1:450991125023:web:755208e465d5a573b39b2a",
+            measurementId: "G-3JZKHJE902"
+        };
+        let app, auth, db, analytics;
+        let currentUser = null;
+        let usersCollection, ordersCollection;
+
+        // Firebase'i başlat
+        try {
+            app = initializeApp(firebaseConfig);
+            analytics = getAnalytics(app);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            usersCollection = collection(db, "users");
+            ordersCollection = collection(db, "orders");
+            console.log("Firebase başarıyla başlatıldı.");
+        } catch (error) {
+            console.error("Firebase başlatma hatası:", error);
+            showModal("Hata", "Uygulama başlatılamadı. Lütfen daha sonra tekrar deneyin.");
+        }
+
+        // === 2. MODAL (BİLDİRİM) FONKSİYONLARI ===
+        const modal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+        }
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        window.closeModal = closeModal;
+
+        // === 3. SEPET (localStorage) FONKSİYONLARI ===
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+        function updateCartCount() {
+            const cart = getCart();
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
+        }
+        function getCartTotalPrice() {
+            const cart = getCart();
+            return cart.reduce((total, item) => {
+                const price = (item.price || 0) * (1 - (item.discount || 0) / 100);
+                return total + (price * item.quantity);
+            }, 0);
+        }
+
+        // === 4. KİMLİK DOĞRULAMA (AUTH) İŞLEMLERİ ===
+        onAuthStateChanged(auth, async (user) => {
+            const authLinks = document.getElementById('auth-links');
+            const userLinks = document.getElementById('user-links');
+            const adminLink = document.getElementById('admin-link');
+            const userEmailSpan = document.getElementById('user-email');
+
+            if (user) {
+                const userDocRef = doc(usersCollection, user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    currentUser = { auth: user, ...userDoc.data() };
+                } else {
+                    currentUser = { auth: user, email: user.email, role: 'customer' }; 
+                }
+                
+                authLinks.style.display = 'none';
+                userLinks.style.display = 'flex';
+                userEmailSpan.textContent = currentUser.email;
+
+                if (currentUser.role === 'admin') {
+                    adminLink.style.display = 'block';
+                } else {
+                    adminLink.style.display = 'none';
+                }
+            } else {
+                currentUser = null;
+                authLinks.style.display = 'flex';
+                userLinks.style.display = 'none';
+                adminLink.style.display = 'none';
+                userEmailSpan.textContent = '';
+                
+                // Checkout sayfası için giriş zorunlu
+                if (window.location.pathname.includes('checkout.html')) {
+                     showModal("Uyarı", "Sipariş vermek için lütfen giriş yapın.");
+                     window.location.href = 'login.html';
+                }
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showModal("Başarılı", "Çıkış yapıldı.");
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Çıkış hatası:", error);
+                showModal("Hata", "Çıkış yapılamadı: " + error.message);
+            }
+        });
+
+        // === 5. SAYFAYA ÖZEL İŞLEVLER ===
+
+        // --- Sipariş Onay Sayfası ---
+        function loadCheckoutPage() {
+            // Giriş yapılmamışsa login'e yönlendir (onAuthStateChanged de yapar ama garanti olsun)
+            if (!currentUser) {
+                // Auth dinleyicisi yönlendirmeyi yapacak
+                return;
+            }
+            
+            const cart = getCart();
+            const itemsDiv = document.getElementById('checkout-items');
+            const totalSpan = document.getElementById('checkout-total-price');
+            const confirmButton = document.getElementById('confirm-order-button');
+            document.getElementById('checkout-message').textContent = '';
+            
+            if (cart.length === 0) {
+                itemsDiv.innerHTML = '<p class="text-gray-500">Sepetinizde ürün bulunmuyor.</p>';
+                totalSpan.textContent = '0.00 TL';
+                confirmButton.disabled = true;
+                confirmButton.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+            
+            confirmButton.disabled = false;
+            confirmButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            let html = '';
+            cart.forEach(item => {
+                const price = (item.price || 0);
+                const discount = (item.discount || 0);
+                const discountedPrice = price * (1 - discount / 100);
+                const itemTotal = discountedPrice * item.quantity;
+                
+                html += `
+                    <div class="flex justify-between py-2">
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>${itemTotal.toFixed(2)} TL</span>
+                    </div>
+                `;
+            });
+            
+            itemsDiv.innerHTML = html;
+            totalSpan.textContent = `${getCartTotalPrice().toFixed(2)} TL`;
+        }
+        
+        // Siparişi Onayla Butonu
+        document.getElementById('confirm-order-button').addEventListener('click', async () => {
+            if (!currentUser) {
+                showModal("Hata", "Sipariş oluşturmak için giriş yapmalısınız.");
+                return;
+            }
+            
+            const cart = getCart();
+            if (cart.length === 0) {
+                showModal("Hata", "Sepetiniz boş.");
+                return;
+            }
+            
+            const totalPrice = getCartTotalPrice();
+            const messageEl = document.getElementById('checkout-message');
+
+            try {
+                await addDoc(ordersCollection, {
+                    userId: currentUser.auth.uid,
+                    items: cart, 
+                    totalPrice: totalPrice,
+                    date: Timestamp.now(), 
+                    status: "Beklemede"
+                });
+
+                // Başarılı sipariş
+                localStorage.removeItem('cart'); // Sepeti temizle
+                updateCartCount();
+                
+                messageEl.textContent = 'Siparişiniz başarıyla alındı! Ana sayfaya yönlendiriliyorsunuz...';
+                showModal("Başarılı", "Siparişiniz başarıyla alındı!");
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error("Sipariş oluşturma hatası:", error);
+                messageEl.textContent = 'Sipariş oluşturulurken bir hata oluştu: ' + error.message;
+                showModal("Hata", "Sipariş oluşturulurken bir hata oluştu: " + error.message);
+            }
+        });
+
+        // === 6. SAYFA YÜKLEME ===
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCartCount(); // Her sayfada sepet sayısını güncelle
+            loadCheckoutPage();
+        });
+        
+    </script>
+</body>
+</html>
