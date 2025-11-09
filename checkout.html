@@ -3,268 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRSSPORA - Siparişi Onayla</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Siparişi Onayla - PAFA TEAMSPORT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* CRSSPORA Tema Rengi (Emerald) */
-        .text-emerald-600 { color: #059669; }
-        .bg-emerald-500 { background-color: #10b981; }
-        .hover\:bg-emerald-600:hover { background-color: #059669; }
-        .border-emerald-500 { border-color: #10b981; }
-        .focus\:ring-emerald-500:focus { --tw-ring-color: #10b981; }
-    </style>
+    <link rel="icon" href="./assets/PAFA TEAMSPORT LOGO.png" type="image/x-icon">
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body class="bg-gray-100 font-sans text-gray-800">
 
-    <!-- Ana Navigasyon Çubuğu -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <a href="./index.html" class="text-3xl font-extrabold text-emerald-600 tracking-wider">CRSSPORA</a>
-                <div class="flex items-center space-x-6">
-                    <a href="./index.html" class="text-gray-600 hover:text-emerald-600 transition duration-150 font-medium" id="index-link">Ana Sayfa</a>
-                    <a href="./cart.html" class="text-gray-600 hover:text-emerald-600 relative transition duration-150">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
-                    </a>
-                    
-                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
-                    <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="./login.html" class="text-gray-600 hover:text-emerald-600 transition duration-150">Giriş Yap</a>
-                        <a href="./register.html" class="text-white bg-emerald-500 hover:bg-emerald-600 px-3 py-1.5 rounded-lg shadow-md font-semibold transition duration-150">Kayıt Ol</a>
+    <!-- Header Yükleme Alanı -->
+    <div id="header-placeholder"></div>
+
+    <main class="container mx-auto px-6 py-8 min-h-screen">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Siparişi Onayla</h1>
+        
+        <div id="checkout-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Teslimat Bilgileri (Sol Taraf) -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-2xl p-6 md:p-8 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Teslimat Bilgileri</h2>
+                <form id="checkout-form" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Ad Soyad</label>
+                        <input type="text" id="name" required class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Adınız Soyadınız">
                     </div>
                     
-                    <!-- Giriş yapıldığında görünecek linkler -->
-                    <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700 font-medium truncate max-w-[100px]"></span>
-                        <a href="./admin.html" id="admin-link" class="hidden text-red-600 font-bold hover:text-red-800 transition duration-150 border border-red-600 px-3 py-1 rounded-lg">Admin</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-red-600 transition duration-150">Çıkış Yap</button>
+                    <div>
+                        <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Adres</label>
+                        <textarea id="address" rows="3" required class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Mahalle, Cadde, Sokak, No..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="city" class="block text-sm font-semibold text-gray-700 mb-2">Şehir</label>
+                            <input type="text" id="city" required class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Telefon</label>
+                            <input type="tel" id="phone" required class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="5XX XXX XX XX">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sipariş Özeti (Sağ Taraf) -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-2xl p-6 sticky top-28 border border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Sipariş Özeti</h2>
+                    
+                    <div id="checkout-summary-items" class="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
+                        <!-- Özet buraya yüklenecek -->
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between text-2xl font-extrabold text-gray-900 mb-6">
+                            <span>Toplam Tutar</span>
+                            <span id="summary-total" class="text-emerald-600">0.00 TL</span>
+                        </div>
+                        
+                        <button type="submit" form="checkout-form" id="confirm-order-btn" class="w-full text-center bg-emerald-500 text-white py-3 px-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition duration-150 shadow-md">
+                            Ödemeyi Tamamla ve Siparişi Ver
+                        </button>
+                        <p class="text-xs text-gray-500 mt-4 text-center">
+                            Not: Bu bir demo sitedir. Gerçek bir ödeme alınmayacaktır. Siparişiniz "Beklemede" olarak sisteme kaydedilecektir.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8 flex justify-center">
-
-        <div class="w-full max-w-xl bg-white p-8 rounded-xl shadow-2xl border border-gray-200">
-            <h2 class="text-3xl font-extrabold mb-8 text-center text-gray-800 border-b-2 border-emerald-500 pb-2">Siparişinizi Tamamlayın</h2>
-            
-            <!-- Sipariş Özeti -->
-            <div class="mb-8">
-                <h3 class="text-xl font-bold mb-4 text-gray-800">1. Sipariş Detayları</h3>
-                <div id="checkout-items" class="divide-y divide-gray-200 border rounded-lg p-4 bg-gray-50">
-                    <!-- Ürünler buraya yüklenecek -->
-                </div>
-                
-                <div class="flex justify-between items-center font-extrabold text-2xl mt-6 pt-4 border-t-2 border-gray-200">
-                    <span>Genel Toplam:</span>
-                    <span id="checkout-total-price" class="text-emerald-600">0.00 TL</span>
-                </div>
-            </div>
-            
-            <!-- Ödeme Uyarısı -->
-            <div id="payment-warning" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 hidden" role="alert">
-                <p class="font-bold">Tek Ürün Uyarısı</p>
-                <p class="text-sm">PayTR Ödeme Linki'ni kullanabilmek için sepetinizde **yalnızca 1 adet ürün** bulunmalıdır. Lütfen sepetinizi güncelleyin.</p>
-            </div>
-            
-            <!-- Adres/Kullanıcı Bilgileri -->
-            <div class="mb-8">
-                <h3 class="text-xl font-bold mb-4 text-gray-800">2. Teslimat Bilgileri</h3>
-                <p class="text-lg text-gray-700">Giriş Yapılan Kullanıcı: <span id="user-info" class="font-semibold text-emerald-600"></span></p>
-                <p class="text-sm text-gray-500 mt-2">Bu bir demosu olduğu için adres bilgisi istenmemektedir.</p>
-            </div>
-
-            <!-- Onay Butonu -->
-            <button id="confirm-order-button" class="w-full bg-emerald-500 text-white py-3.5 px-4 rounded-xl font-bold text-xl hover:bg-emerald-600 transition duration-150 shadow-md">
-                Siparişi Onayla ve PayTR ile Öde
-            </button>
-            <div id="checkout-message" class="text-center text-green-600 text-lg font-semibold mt-4"></div>
-
-            <div id="loading-indicator" class="mt-4 text-center hidden">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 inline-block"></div>
-                <p class="text-sm text-gray-500 mt-2">Sipariş oluşturuluyor...</p>
+        <!-- Mesaj Modalı -->
+        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-8 shadow-xl max-w-sm w-full">
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h3>
+                <p id="modal-message" class="text-gray-700 mb-6"></p>
+                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-2 rounded-md hover:bg-emerald-700 transition duration-200">Tamam</button>
             </div>
         </div>
-
     </main>
-    
-    <!-- Hata/Bilgi Modalı -->
-    <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[100] hidden transition-opacity" onclick="closeModal()">
-        <div class="relative top-0 mx-4 p-6 border w-full max-w-sm shadow-2xl rounded-xl bg-white transform transition-all duration-300 scale-100" onclick="event.stopPropagation()">
-            <div class="mt-2 text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 mb-4">
-                    <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h3 id="modal-title" class="text-xl leading-6 font-bold text-gray-900">Başlık</h3>
-                <div class="mt-4 px-1 py-1">
-                    <p id="modal-message" class="text-sm text-gray-500"></p>
-                </div>
-                <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-emerald-500 text-white text-base font-semibold rounded-lg w-full shadow-md hover:bg-emerald-600 transition duration-150" onclick="closeModal()">
-                        Kapat
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- JavaScript Mantığı -->
+    <!-- Footer Yükleme Alanı -->
+    <div id="footer-placeholder"></div>
+
     <script type="module">
         import { 
+            loadHeaderAndFooter,
             initAuthAndNav, 
             currentUser,
-            getCart, 
+            getCart,
+            saveCart,
             getCartTotalPrice,
             createOrder,
             showModal
         } from './common.js';
 
-        // Sayfa kimliğini tanımla
-        const PAGE_ID = 'checkout';
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 1. Auth durumunu kontrol et
+            await initAuthAndNav();
+            // 2. Header/Footer yükle
+            await loadHeaderAndFooter(null); // Aktif link yok
 
-        window.onload = async () => {
-            await initAuthAndNav(PAGE_ID);
-            // Auth tamamlandıktan sonra sayfa içeriğini yükle
-            loadCheckoutPage();
-        };
-
-        /**
-         * Sipariş onay sayfasını yükler ve kullanıcıyı kontrol eder.
-         */
-        function loadCheckoutPage() {
-            // Güvenlik: Kullanıcı yoksa login'e yönlendir (initAuthAndNav zaten kontrol etti)
+            // 3. Auth ve Sepet Kontrolleri
             if (!currentUser) {
-                showModal("Uyarı", "Sipariş vermek için lütfen giriş yapın.");
-                window.location.href = './login.html';
+                showModal("Giriş Gerekli", "Siparişi onaylamak için lütfen giriş yapın.");
+                setTimeout(() => window.location.href = './auth.html', 2000);
                 return;
             }
-            
+
             const cart = getCart();
-            const itemsDiv = document.getElementById('checkout-items');
-            const totalSpan = document.getElementById('checkout-total-price');
-            const confirmButton = document.getElementById('confirm-order-button');
-            const userInfoSpan = document.getElementById('user-info');
-            const warningDiv = document.getElementById('payment-warning');
-
-            document.getElementById('checkout-message').textContent = '';
-            
-            userInfoSpan.textContent = currentUser.email;
-
-            // Sepet Boşsa
             if (cart.length === 0) {
-                itemsDiv.innerHTML = '<p class="text-gray-500 p-4">Sepetinizde ürün bulunmuyor. <a href="./index.html" class="text-emerald-600 font-semibold hover:underline">Hemen Alışverişe Başlayın</a></p>';
-                totalSpan.textContent = '0.00 TL';
-                confirmButton.disabled = true;
-                confirmButton.classList.add('opacity-50', 'cursor-not-allowed');
-                warningDiv.classList.add('hidden');
+                showModal("Sepet Boş", "Sepetinizde ürün bulunmuyor. Ana sayfaya yönlendiriliyorsunuz.");
+                setTimeout(() => window.location.href = './index.html', 2000);
                 return;
             }
-            
-            // PayTR Linkle Ödeme Kuralı Kontrolü
-            let isPayTRPossible = cart.length === 1 && cart[0].quantity === 1 && cart[0].paytrLink;
 
-            if (isPayTRPossible) {
-                warningDiv.classList.add('hidden');
-                confirmButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                confirmButton.textContent = "Siparişi Onayla ve PayTR ile Öde";
-            } else {
-                warningDiv.classList.remove('hidden');
-                confirmButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                confirmButton.textContent = "Siparişi Onayla (Ödeme Yönlendirmesiz)";
-                // PayTR linki olmasa bile siparişi kaydetme işlemine izin ver
-            }
+            // 4. Sayfayı yükle
+            loadCheckoutSummary(cart);
+            setupCheckoutForm(cart);
+        });
 
-            confirmButton.disabled = false;
+        function loadCheckoutSummary(cart) {
+            const summaryItemsEl = document.getElementById('checkout-summary-items');
+            const totalPrice = getCartTotalPrice();
             
-            let html = '';
+            summaryItemsEl.innerHTML = '';
             cart.forEach(item => {
                 const price = (item.price || 0);
                 const discount = (item.discount || 0);
                 const discountedPrice = price * (1 - (discount / 100));
-                const itemTotal = discountedPrice * item.quantity;
                 
-                html += `
-                    <div class="flex justify-between py-2 text-gray-700">
-                        <span>${item.name} <span class="font-semibold text-sm">(x${item.quantity})</span></span>
-                        <span class="font-medium">${itemTotal.toFixed(2)} TL</span>
+                summaryItemsEl.innerHTML += `
+                    <div class="flex justify-between items-center text-sm text-gray-700">
+                        <span class="font-semibold">${item.name} <span class="text-gray-500">x${item.quantity}</span></span>
+                        <span>${(discountedPrice * item.quantity).toFixed(2)} TL</span>
                     </div>
                 `;
             });
-            
-            itemsDiv.innerHTML = html;
-            totalSpan.textContent = `${getCartTotalPrice().toFixed(2)} TL`;
+
+            document.getElementById('summary-total').textContent = `${totalPrice.toFixed(2)} TL`;
+
+            // Kullanıcı bilgilerini forma doldur (eğer varsa)
+            document.getElementById('name').value = currentUser.name || '';
         }
-        
-        // Siparişi Onayla Butonu
-        document.getElementById('confirm-order-button').addEventListener('click', async () => {
-            if (!currentUser) {
-                showModal("Hata", "Sipariş oluşturmak için giriş yapmalısınız.");
-                return;
-            }
-            
-            const cart = getCart();
-            if (cart.length === 0) {
-                showModal("Hata", "Sepetiniz boş.");
-                return;
-            }
-            
-            const totalPrice = getCartTotalPrice();
-            const messageEl = document.getElementById('checkout-message');
-            const confirmButton = document.getElementById('confirm-order-button');
-            const loadingIndicator = document.getElementById('loading-indicator');
 
-            confirmButton.disabled = true;
-            loadingIndicator.classList.remove('hidden');
-            messageEl.textContent = '';
+        function setupCheckoutForm(cart) {
+            const form = document.getElementById('checkout-form');
+            const submitBtn = document.getElementById('confirm-order-btn');
 
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Sipariş oluşturuluyor...";
+                submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
 
-            // PayTR Kontrolü
-            const isPayTRPossible = cart.length === 1 && cart[0].quantity === 1 && cart[0].paytrLink;
-            const paytrLink = isPayTRPossible ? cart[0].paytrLink : null;
-
-            try {
-                // 1. Siparişi Firestore'a kaydet
-                const orderId = await createOrder(cart, totalPrice);
-
-                // 2. Başarılı sipariş
-                localStorage.removeItem('cart'); // Sepeti temizle
-                
-                if (paytrLink) {
-                    messageEl.textContent = 'Siparişiniz alındı! Ödeme için PayTR sayfasına yönlendiriliyorsunuz...';
-                    showModal("Yönlendiriliyor", `Sipariş ID: ${orderId} Oluşturuldu. Şimdi PayTR sayfasına yönlendiriliyorsunuz.`);
+                try {
+                    const totalPrice = getCartTotalPrice();
                     
-                    // PayTR linkine yönlendir
-                    setTimeout(() => {
-                        window.location.href = paytrLink;
-                    }, 1500);
+                    // Not: PayTR link mantığı burada devreye girebilir.
+                    // Şimdilik sadece siparişi kaydediyoruz.
+                    
+                    await createOrder(cart, totalPrice);
 
-                } else {
-                    messageEl.textContent = 'Siparişiniz başarıyla alındı! Ana sayfaya yönlendiriliyorsunuz...';
-                    showModal("Başarılı", `Sipariş ID: ${orderId} Oluşturuldu. Ödeme bekleniyor.`);
+                    // Sipariş başarılı
+                    saveCart([]); // Sepeti temizle
+                    showModal("Sipariş Başarılı!", "Siparişiniz başarıyla alındı. Siparişlerim sayfanıza yönlendiriliyorsunuz.");
+                    setTimeout(() => window.location.href = './my-orders.html', 2000);
 
-                    // Ana sayfaya yönlendir
-                    setTimeout(() => {
-                        window.location.href = './index.html';
-                    }, 3000);
+                } catch (error) {
+                    console.error("Sipariş verme hatası:", error);
+                    showModal("Hata", `Sipariş oluşturulurken bir hata oluştu: ${error.message}`);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Ödemeyi Tamamla ve Siparişi Ver";
+                    submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
                 }
-
-
-            } catch (error) {
-                console.error("Sipariş oluşturma hatası:", error);
-                messageEl.textContent = 'Sipariş oluşturulurken bir hata oluştu: ' + error.message;
-                showModal("Hata", "Sipariş oluşturulurken bir hata oluştu: " + error.message);
-
-            } finally {
-                loadingIndicator.classList.add('hidden');
-                confirmButton.disabled = false;
-            }
-        });
+            });
+        }
     </script>
 </body>
 </html>
