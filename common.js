@@ -184,7 +184,8 @@ window.updateCartQuantity = updateCartQuantity;
 
 // Bu fonksiyon, her sayfa yüklendiğinde (DOMContentLoaded) çağrılmalı.
 // Navigasyon çubuğunu ve kullanıcı durumunu yönetir.
-export function initAuthAndNav() {
+// GÜNCELLENDİ: Sayfaya özel kodları auth tamamlandıktan sonra çalıştırmak için bir callback eklendi.
+export function initAuthAndNav(pageSpecificCallback = null) {
     
     onAuthStateChanged(auth, async (user) => {
         const authLinks = document.getElementById('auth-links');
@@ -230,8 +231,14 @@ export function initAuthAndNav() {
             
             // Giriş yapılmamışsa, korumalı sayfalardan (admin, checkout) yönlendir
             if (window.location.pathname.includes('admin.html') || window.location.pathname.includes('checkout.html')) {
-                 window.location.href = 'login.html';
+                 window.location.href = './login.html'; // Göreceli yol düzeltmesi
             }
+        }
+
+        // GÜNCELLENDİ: Auth işlemi tamamlandıktan sonra callback'i çalıştır.
+        // Bu, 'currentUser' null iken korumalı sayfaların yüklenmesini engeller.
+        if (pageSpecificCallback) {
+            pageSpecificCallback(currentUser);
         }
     });
 
