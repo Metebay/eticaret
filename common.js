@@ -13,6 +13,7 @@ import {
     signInWithEmailAndPassword,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+// Eksik olan fonksiyonları export ediyoruz: getDocs, query, where, Timestamp, onSnapshot.
 import {
     getFirestore,
     doc,
@@ -20,12 +21,12 @@ import {
     addDoc,
     deleteDoc,
     collection,
-    query,
-    getDocs,
-    Timestamp,
+    query, // <-- EKLENDİ
+    getDocs, // <-- EKLENDİ
+    Timestamp, // <-- EKLENDİ
     getDoc,
-    where,
-    onSnapshot
+    where, // <-- EKLENDİ
+    onSnapshot // <-- EKLENDİ
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
@@ -41,6 +42,11 @@ const firebaseConfig = {
     appId: "1:632645198033:web:430cc6dc6671703f25a5f0",
     measurementId: "G-52SZ74C9F4"
 };
+
+// Yeni export'lar: Firestore fonksiyonlarını dışarı aktarıyoruz
+export { getDocs, query, where, onSnapshot, Timestamp }; // <-- BURADAN DİĞER SAYFALARA AÇILIYOR
+export { doc, getDoc, setDoc, addDoc, deleteDoc, collection }; // Sadece kolaylık için eklendi
+
 
 // YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
 const ADMIN_EMAIL = 'admin@e-ticaret.com';
@@ -252,7 +258,7 @@ export function createProductCard(product, productId) {
                 <div class="flex items-center justify-between">
                     ${discount > 0 ? `
                         <div>
-                            <span class="text-2xl font-extrabold text-emerald-600">${discountedPrice.toFixed(2)} TL</span>
+                            <span class="text-2xl font-extrabold text-red-600">${discountedPrice.toFixed(2)} TL</span>
                             <span class="text-sm text-gray-500 line-through ml-2">${price.toFixed(2)} TL</span>
                         </div>
                     ` : `
