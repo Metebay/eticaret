@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ürün Detayı - CRSSPORA</title>
+    <title>Sepetim - CRSSPORA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -12,7 +12,7 @@
 </head>
 <body class="bg-gray-50 font-sans antialiased">
 
-    <!-- Ana Navigasyon Çubuğu (common.js halleder) -->
+    <!-- Ana Navigasyon Çubuğu -->
     <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -40,10 +40,49 @@
     <!-- Sayfa Konteyneri -->
     <main class="container mx-auto p-4 sm:px-6 lg:px-8 mt-8">
 
-        <!-- ===== 2. Ürün Detay Sayfası ===== -->
-        <div id="page-product">
-            <div id="product-detail-content" class="bg-white p-8 sm:p-12 rounded-lg shadow-xl max-w-5xl mx-auto">
-                <!-- Ürün detayı buraya yüklenecek -->
+        <!-- ===== 5. Sepet Sayfası (YENİ TASARIM) ===== -->
+        <div id="page-cart">
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Sepetim</h1>
+            
+            <!-- Yeni 2 Sütunlu Grid Yapısı -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Sol Sütun: Sepet Ürünleri -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl">
+                        <h2 class="text-2xl font-semibold mb-6 text-gray-800">Sepetinizdeki Ürünler</h2>
+                        <!-- Ürünler listesi -->
+                        <div id="cart-items" class="divide-y divide-gray-200">
+                            <!-- Sepet ürünleri buraya yüklenecek (common.js) -->
+                        </div>
+                        <!-- Sepet boşsa göster -->
+                        <div id="cart-empty" class="text-center text-gray-500 py-10 hidden">
+                            Sepetiniz boş.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sağ Sütun: Sipariş Özeti (Sticky) -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl sticky top-24">
+                        <h2 class="text-2xl font-semibold mb-6 text-gray-800">Sipariş Özeti</h2>
+                        
+                        <!-- cart-summary, cart-full ve cart-total-price JS tarafından yönetilir -->
+                        <div id="cart-summary">
+                            <!-- Sepet doluysa göster -->
+                            <div id="cart-full" class="hidden space-y-4">
+                                <div class="flex justify-between items-center font-bold text-2xl">
+                                    <span>Toplam Tutar:</span>
+                                    <span id="cart-total-price" class="text-emerald-600">0.00 TL</span>
+                                </div>
+                                <a href="checkout.html" class="block w-full text-center bg-emerald-600 text-white py-3 px-4 rounded-md hover:bg-emerald-700 mt-6 font-semibold text-lg transition-colors shadow-lg hover:shadow-emerald-300">Siparişi Onayla</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Not: 'cart-empty' durumu JS tarafından idare edilir ve sol sütunda gösterilir -->
+                    </div>
+                </div>
+                
             </div>
         </div>
 
@@ -69,32 +108,20 @@
 
     <!-- Sadece bu sayfaya özel JS -->
     <script type="module">
-        // Ortak fonksiyonları import et
         import { 
-            db, 
-            productsCollection, 
             showModal, 
             updateCartCount, 
             initAuthAndNav,
-            loadProductPage
+            loadCartPage
         } from './common.js';
+        
+        // Fonksiyonu global scope'a ata ki common.js içinden çağırılabilsin
+        window.loadCartPage = loadCartPage;
 
-        // Sayfa yüklendiğinde
         window.addEventListener('DOMContentLoaded', () => {
-            initAuthAndNav();   // Navigasyon ve Auth durumunu başlat
-            updateCartCount();  // Sepet sayısını güncelle
-            
-            // URL'den ürün ID'sini al (örn: product.html?id=ABC)
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            const contentDiv = document.getElementById('product-detail-content');
-            
-            if (productId) {
-                loadProductPage(productId, contentDiv);
-            } else {
-                contentDiv.innerHTML = '<div class="text-center p-10 text-red-500">Ürün ID bulunamadı.</div>';
-                setTimeout(() => window.location.href = 'index.html', 2000);
-            }
+            initAuthAndNav();
+            updateCartCount();
+            loadCartPage(); // Sepet sayfasını yükle
         });
         
     </script>
