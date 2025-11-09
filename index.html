@@ -4,34 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ana Sayfa - E-Ticaret Sitesi</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased">
 
     <!-- Ana Navigasyon Çubuğu -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <a href="index.html" class="text-2xl font-bold text-blue-600">E-Ticaret</a>
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="text-gray-600 hover:text-blue-600">Ana Sayfa</a>
-                    <a href="cart.html" class="text-gray-600 hover:text-blue-600 relative">
+    <nav class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600">E-Ticaret</a>
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Ana Sayfa</a>
+                    <a href="cart.html" class="text-gray-600 hover:text-indigo-600 transition-colors relative">
                         Sepet
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                        <span id="cart-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
                     </a>
                     
-                    <!-- Kullanıcı giriş durumuna göre değişen linkler -->
                     <div id="auth-links" class="flex items-center space-x-4">
-                        <a href="login.html" class="text-gray-600 hover:text-blue-600">Giriş Yap</a>
-                        <a href="register.html" class="text-blue-600 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md">Kayıt Ol</a>
+                        <a href="login.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Giriş Yap</a>
+                        <a href="register.html" class="text-indigo-600 bg-indigo-100 hover:bg-indigo-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kayıt Ol</a>
                     </div>
                     
-                    <!-- Giriş yapıldığında görünecek linkler -->
                     <div id="user-links" class="hidden items-center space-x-4">
-                        <span id="user-email" class="text-sm text-gray-700"></span>
-                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800">Admin Paneli</a>
-                        <button id="logout-button" class="text-gray-600 hover:text-blue-600">Çıkış Yap</button>
+                        <span id="user-email" class="text-sm text-gray-700 hidden sm:block"></span>
+                        <a href="admin.html" id="admin-link" class="hidden text-red-600 font-medium hover:text-red-800 transition-colors">Admin Paneli</a>
+                        <button id="logout-button" class="text-gray-600 hover:text-indigo-600 transition-colors text-sm font-medium">Çıkış Yap</button>
                     </div>
                 </div>
             </div>
@@ -39,14 +40,13 @@
     </nav>
 
     <!-- Sayfa Konteyneri -->
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 sm:px-6 lg:px-8 mt-8">
 
         <!-- ===== 1. Ana Sayfa (Ürün Listesi) ===== -->
         <div id="page-index">
-            <h1 class="text-3xl font-bold mb-6">Tüm Ürünler</h1>
-            <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Tüm Ürünler</h1>
+            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Ürünler buraya yüklenecek -->
-                <div class="text-center p-4">Yükleniyor...</div>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
                     <p id="modal-message" class="text-sm text-gray-500"></p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="modal-close-button" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="closeModal()">
+                    <button id="modal-close-button" class="px-4 py-2 bg-indigo-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-300" onclick="closeModal()">
                         Kapat
                     </button>
                 </div>
@@ -70,287 +70,25 @@
     </div>
 
 
-    <!-- Firebase SDK - TÜM MANTIK BURADA -->
+    <!-- Sadece bu sayfaya özel JS -->
     <script type="module">
-        // Firebase SDK'larını import et
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+        // Ortak fonksiyonları import et
         import { 
-            getAuth, 
-            onAuthStateChanged, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            setDoc, 
-            addDoc, 
-            deleteDoc, 
-            collection, 
-            query, 
-            getDocs, 
-            Timestamp,
-            onSnapshot // Canlı güncellemeler için
-        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+            db, 
+            productsCollection, 
+            showModal, 
+            updateCartCount, 
+            initAuthAndNav,
+            loadIndexPage
+        } from './common.js';
 
-        // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCcpgbcbHqMjkyxVmRllLj5ZV1yljMhsPk",
-            authDomain: "whatsapp-415e2.firebaseapp.com",
-            databaseURL: "https://whatsapp-415e2-default-rtdb.firebaseio.com",
-            projectId: "whatsapp-415e2",
-            storageBucket: "whatsapp-415e2.firebasestorage.app",
-            messagingSenderId: "632645198033",
-            appId: "1:632645198033:web:430cc6dc6671703f25a5f0",
-            measurementId: "G-52SZ74C9F4"
-        };
-
-        let app, auth, db, analytics;
-        let currentUser = null; // Aktif kullanıcıyı (auth + firestore verisi) tutar
-        
-        // Firestore koleksiyon referansları
-        let productsCollection, ordersCollection, usersCollection;
-
-        // Firebase'i başlat
-        try {
-            app = initializeApp(firebaseConfig);
-            analytics = getAnalytics(app);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            productsCollection = collection(db, "products");
-            ordersCollection = collection(db, "orders");
-            usersCollection = collection(db, "users");
-            
-            console.log("Firebase başarıyla başlatıldı.");
-        } catch (error) {
-            console.error("Firebase başlatma hatası:", error);
-            showModal("Hata", "Uygulama başlatılamadı. Lütfen daha sonra tekrar deneyin.");
-        }
-
-        // === 2. MODAL (BİLDİRİM) FONKSİYONLARI ===
-        const modal = document.getElementById('message-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-
-        function showModal(title, message) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-        window.closeModal = closeModal;
-
-
-        // === 3. SEPET (localStorage) FONKSİYONLARI ===
-
-        function getCart() {
-            return JSON.parse(localStorage.getItem('cart') || '[]');
-        }
-
-        function saveCart(cart) {
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-        }
-
-        function addToCart(productId, product) {
-            const cart = getCart();
-            const existingProductIndex = cart.findIndex(item => item.id === productId);
-
-            if (existingProductIndex > -1) {
-                cart[existingProductIndex].quantity += 1;
-            } else {
-                cart.push({ ...product, id: productId, quantity: 1 });
-            }
-            saveCart(cart);
-            showModal("Başarılı", `${product.name} sepete eklendi!`);
-        }
-
-        function removeFromCart(productId) {
-            let cart = getCart();
-            cart = cart.filter(item => item.id !== productId);
-            saveCart(cart);
-            // Sepet sayfasını yeniden yükle (eğer cart.html'deysek)
-            if (window.location.pathname.includes('cart.html')) {
-                loadCartPage();
-            }
-        }
-
-        function updateCartQuantity(productId, quantity) {
-            let cart = getCart();
-            const existingProductIndex = cart.findIndex(item => item.id === productId);
-
-            if (existingProductIndex > -1) {
-                if (quantity <= 0) {
-                    cart = cart.filter(item => item.id !== productId);
-                } else {
-                    cart[existingProductIndex].quantity = quantity;
-                }
-                saveCart(cart);
-                // Sayfaları yeniden yükle (eğer o sayfalardaysak)
-                if (window.location.pathname.includes('cart.html')) {
-                    loadCartPage();
-                }
-                 if (window.location.pathname.includes('checkout.html')) {
-                    loadCheckoutPage();
-                }
-            }
-        }
-        
-        function getCartTotalPrice() {
-            const cart = getCart();
-            return cart.reduce((total, item) => {
-                const price = (item.price || 0) * (1 - (item.discount || 0) / 100);
-                return total + (price * item.quantity);
-            }, 0);
-        }
-
-        function updateCartCount() {
-            const cart = getCart();
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
-        }
-
-        // === 4. KİMLİK DOĞRULAMA (AUTH) İŞLEMLERİ ===
-
-        // Kullanıcı giriş/çıkış durumunu dinle (Tüm sayfalarda NAV için gerekli)
-        onAuthStateChanged(auth, async (user) => {
-            const authLinks = document.getElementById('auth-links');
-            const userLinks = document.getElementById('user-links');
-            const adminLink = document.getElementById('admin-link');
-            const userEmailSpan = document.getElementById('user-email');
-
-            // Admin email adresini hier belirleyin
-            const ADMIN_EMAIL = 'admin@e-ticaret.com'; // <-- YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
-
-            if (user) {
-                // Kullanıcı giriş yaptı
-                const userDocRef = doc(usersCollection, user.uid);
-                const userDoc = await getDoc(userDocRef);
-
-                let userData = { email: user.email }; // Varsayılan veri
-                if (userDoc.exists()) {
-                    userData = { ...userData, ...userDoc.data() };
-                }
-
-                // Rolü Firestore'dan değil, e-posta adresinden belirle
-                const userRole = (user.email === ADMIN_EMAIL) ? 'admin' : 'customer';
-
-                currentUser = { auth: user, ...userData, role: userRole };
-                
-                authLinks.style.display = 'none';
-                userLinks.style.display = 'flex';
-                userEmailSpan.textContent = currentUser.email;
-
-                if (currentUser.role === 'admin') {
-                    adminLink.style.display = 'block';
-                } else {
-                    adminLink.style.display = 'none';
-                }
-
-            } else {
-                // Kullanıcı çıkış yaptı
-                currentUser = null;
-                authLinks.style.display = 'flex';
-                userLinks.style.display = 'none';
-                adminLink.style.display = 'none';
-                userEmailSpan.textContent = '';
-            }
-        });
-
-        // Çıkış Butonu (Tüm sayfalarda NAV için gerekli)
-        document.getElementById('logout-button').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showModal("Başarılı", "Çıkış yapıldı.");
-                window.location.href = 'index.html'; // Ana sayfaya yönlendir
-            } catch (error) {
-                console.error("Çıkış hatası:", error);
-                showModal("Hata", "Çıkış yapılamadı: " + error.message);
-            }
-        });
-
-
-        // === 5. SAYFAYA ÖZEL İŞLEVLER ===
-
-        // --- Ana Sayfa (Index) ---
-        async function loadIndexPage() {
-            const productListDiv = document.getElementById('product-list');
-            if (!productListDiv) return; // Sadece index.html'de çalış
-            
-            productListDiv.innerHTML = '<div class="text-center p-4 col-span-full">Ürünler yükleniyor...</div>';
-            
-            try {
-                const q = query(productsCollection);
-                const querySnapshot = await getDocs(q);
-                
-                if (querySnapshot.empty) {
-                    productListDiv.innerHTML = '<div class="text-center p-4 col-span-full">Gösterilecek ürün bulunamadı.</div>';
-                    return;
-                }
-
-                let html = '';
-                querySnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    const productId = doc.id;
-                    const price = (product.price || 0);
-                    const discount = (product.discount || 0);
-                    const discountedPrice = price * (1 - discount / 100);
-
-                    html += `
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
-                            <a href="product.html?id=${productId}">
-                                <img src="${product.images[0] || 'https://placehold.co/400x300/eee/ccc?text=Gorsel+Yok'}" 
-                                     alt="${product.name}" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://placehold.co/400x300/eee/ccc?text=Gorsel+Hata'">
-                            </a>
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold text-gray-800">${product.name}</h3>
-                                <p class="text-sm text-gray-500 mb-2">${product.category}</p>
-                                <div class="flex items-center justify-between">
-                                    ${discount > 0 ? `
-                                        <div>
-                                            <span class="text-xl font-bold text-blue-600">${discountedPrice.toFixed(2)} TL</span>
-                                            <span class="text-sm text-gray-500 line-through ml-2">${price.toFixed(2)} TL</span>
-                                        </div>
-                                    ` : `
-                                        <span class="text-xl font-bold text-blue-600">${price.toFixed(2)} TL</span>
-                                    `}
-                                </div>
-                                <a href="product.html?id=${productId}" class="block w-full text-center mt-4 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                                    Detayları Gör
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                });
-                productListDiv.innerHTML = html;
-                
-            } catch (error) {
-                console.error("Ürünler yüklenirken hata:", error);
-                productListDiv.innerHTML = '<div class="text-center p-4 col-span-full text-red-500">Ürünler yüklenemedi.</div>';
-            }
-        }
-        
-        // Diğer sayfa yükleme fonksiyonları (Bu dosyada çağrılmayacaklar ama
-        // kopyala-yapıştır kolaylığı için burada tutulabilir veya silinebilirler)
-        // Biz sadece ilgili olanı çağıracağız.
-        
-        // === 6. SAYFA YÜKLEME ===
-        
-        // DOM yüklendiğinde bu sayfaya özel fonksiyonu çalıştır
+        // Sayfa yüklendiğinde
         window.addEventListener('DOMContentLoaded', () => {
-            updateCartCount(); // Her sayfada sepet sayısını güncelle
-            loadIndexPage();   // Sadece ana sayfa ürünlerini yükle
+            initAuthAndNav();   // Navigasyon ve Auth durumunu başlat
+            updateCartCount();  // Sepet sayısını güncelle
+            
+            const productListDiv = document.getElementById('product-list');
+            loadIndexPage(productListDiv); // Ana sayfa ürünlerini yükle
         });
         
     </script>
