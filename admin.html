@@ -213,15 +213,22 @@
             const adminLink = document.getElementById('admin-link');
             const userEmailSpan = document.getElementById('user-email');
 
+            // Admin email adresini hier belirleyin
+            const ADMIN_EMAIL = 'admin@e-ticaret.com'; // <-- YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
+
             if (user) {
                 const userDocRef = doc(usersCollection, user.uid);
                 const userDoc = await getDoc(userDocRef);
 
+                let userData = { email: user.email }; // Varsayılan veri
                 if (userDoc.exists()) {
-                    currentUser = { auth: user, ...userDoc.data() };
-                } else {
-                    currentUser = { auth: user, email: user.email, role: 'customer' }; 
+                    userData = { ...userData, ...userDoc.data() };
                 }
+
+                // Rolü Firestore'dan değil, e-posta adresinden belirle
+                const userRole = (user.email === ADMIN_EMAIL) ? 'admin' : 'customer';
+
+                currentUser = { auth: user, ...userData, role: userRole };
                 
                 authLinks.style.display = 'none';
                 userLinks.style.display = 'flex';
