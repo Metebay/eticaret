@@ -105,13 +105,14 @@
 
         // === 1. KURULUM VE GENEL DEĞİŞKENLER ===
         const firebaseConfig = {
-            apiKey: "AIzaSyBcSsRPlvHQ6zSy9ntbVfSh8BzzmgbIWtY",
-            authDomain: "eticaret-1c9f6.firebaseapp.com",
-            projectId: "eticaret-1c9f6",
-            storageBucket: "eticaret-1c9f6.firebasestorage.app",
-            messagingSenderId: "450991125023",
-            appId: "1:450991125023:web:755208e465d5a573b39b2a",
-            measurementId: "G-3JZKHJE902"
+            apiKey: "AIzaSyCcpgbcbHqMjkyxVmRllLj5ZV1yljMhsPk",
+            authDomain: "whatsapp-415e2.firebaseapp.com",
+            databaseURL: "https://whatsapp-415e2-default-rtdb.firebaseio.com",
+            projectId: "whatsapp-415e2",
+            storageBucket: "whatsapp-415e2.firebasestorage.app",
+            messagingSenderId: "632645198033",
+            appId: "1:632645198033:web:430cc6dc6671703f25a5f0",
+            measurementId: "G-52SZ74C9F4"
         };
         let app, auth, db, analytics;
         let currentUser = null;
@@ -161,14 +162,22 @@
             const adminLink = document.getElementById('admin-link');
             const userEmailSpan = document.getElementById('user-email');
 
+            // Admin email adresini hier belirleyin
+            const ADMIN_EMAIL = 'admin@e-ticaret.com'; // <-- YÖNETİCİ EMAİLİNİ BURADAN DEĞİŞTİRİN
+
             if (user) {
                 const userDocRef = doc(usersCollection, user.uid);
                 const userDoc = await getDoc(userDocRef);
+                
+                let userData = { email: user.email }; // Varsayılan veri
                 if (userDoc.exists()) {
-                    currentUser = { auth: user, ...userDoc.data() };
-                } else {
-                    currentUser = { auth: user, email: user.email, role: 'customer' }; 
+                    userData = { ...userData, ...userDoc.data() };
                 }
+
+                // Rolü Firestore'dan değil, e-posta adresinden belirle
+                const userRole = (user.email === ADMIN_EMAIL) ? 'admin' : 'customer';
+
+                currentUser = { auth: user, ...userData, role: userRole };
                 
                 authLinks.style.display = 'none';
                 userLinks.style.display = 'flex';
