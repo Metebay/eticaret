@@ -53,6 +53,9 @@
                         <span id="checkout-total-price">0.00 TL</span>
                     </div>
                 </div>
+                <!-- YENİ: Uyarı mesajı alanı -->
+                <div id="checkout-warning" class="text-sm text-red-600 text-center mb-4 hidden"></div>
+                <!-- Bitiş: YENİ -->
                 <button id="confirm-order-button" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Siparişi Onayla ve Bitir</button>
                 <div id="checkout-message" class="text-green-600 text-sm mt-4 text-center"></div>
             </div>
@@ -234,16 +237,30 @@
             const itemsDiv = document.getElementById('checkout-items');
             const totalSpan = document.getElementById('checkout-total-price');
             const confirmButton = document.getElementById('confirm-order-button');
+            const warningDiv = document.getElementById('checkout-warning'); // YENİ
             document.getElementById('checkout-message').textContent = '';
             
-            if (cart.length === 0) {
+            // YENİ: Sepet kontrolü
+            if (cart.length > 1) {
+                itemsDiv.innerHTML = '<p class="text-red-500">Sepetinizde birden fazla ürün var.</p>';
+                warningDiv.textContent = 'PayTR Linkle Ödeme, tek seferde sadece 1 ürün tipi için geçerlidir. Lütfen sepetinizde tek bir ürün bırakın.';
+                warningDiv.style.display = 'block';
+                confirmButton.disabled = true;
+                confirmButton.classList.add('opacity-50', 'cursor-not-allowed');
+                totalSpan.textContent = `${getCartTotalPrice().toFixed(2)} TL`;
+                return;
+            } 
+            else if (cart.length === 0) {
                 itemsDiv.innerHTML = '<p class="text-gray-500">Sepetinizde ürün bulunmuyor.</p>';
                 totalSpan.textContent = '0.00 TL';
+                warningDiv.style.display = 'none';
                 confirmButton.disabled = true;
                 confirmButton.classList.add('opacity-50', 'cursor-not-allowed');
                 return;
             }
             
+            // Sepette 1 ürün var, devam et
+            warningDiv.style.display = 'none';
             confirmButton.disabled = false;
             confirmButton.classList.remove('opacity-50', 'cursor-not-allowed');
             
@@ -255,18 +272,7 @@
                 const itemTotal = discountedPrice * item.quantity;
                 
                 html += `
-                    <div class="flex justify-between py-2">
-                        <span>${item.name} (x${item.quantity})</span>
-                        <span>${itemTotal.toFixed(2)} TL</span>
-                    </div>
-                `;
-            });
-            
-            itemsDiv.innerHTML = html;
-            totalSpan.textContent = `${getCartTotalPrice().toFixed(2)} TL`;
-        }
-        
-        // Siparişi Onayla Butonu
+        // Siparişi Onayla Butonu - GÜNCELLENDİ
         document.getElementById('confirm-order-button').addEventListener('click', async () => {
             if (!currentUser) {
                 showModal("Hata", "Sipariş oluşturmak için giriş yapmalısınız.");
@@ -274,33 +280,44 @@
             }
             
             const cart = getCart();
-            if (cart.length === 0) {
-                showModal("Hata", "Sepetiniz boş.");
+            // Kontrol (Buton kilitli olmalı ama yine de kontrol edelim)
+            if (cart.length !== 1) {
+                showModal("Hata", "Sepetinizde 1 ürün olmalıdır.");
                 return;
+            }
+
+            const item = cart[0]; // Tek ürünü al
+            const paytrLink = item.paytrLink;
+
+            if (!paytrLink) {
+                 showModal("Hata", "Bu ürün için bir ödeme linki tanımlanmamış. Lütfen yönetici ile iletişime geçin.");
+                 return;
             }
             
             const totalPrice = getCartTotalPrice();
             const messageEl = document.getElementById('checkout-message');
 
             try {
+                // 1. Siparişi Firestore'a kaydet
                 await addDoc(ordersCollection, {
                     userId: currentUser.auth.uid,
                     items: cart, 
                     totalPrice: totalPrice,
                     date: Timestamp.now(), 
-                    status: "Beklemede"
+                    status: "Ödeme Bekliyor" // Durumu "Ödeme Bekliyor" olarak değiştir
                 });
 
-                // Başarılı sipariş
-                localStorage.removeItem('cart'); // Sepeti temizle
+                // 2. Başarılı sipariş sonrası sepeti temizle
+                localStorage.removeItem('cart'); 
                 updateCartCount();
                 
-                messageEl.textContent = 'Siparişiniz başarıyla alındı! Ana sayfaya yönlendiriliyorsunuz...';
-                showModal("Başarılı", "Siparişiniz başarıyla alındı!");
+                messageEl.textContent = 'Siparişiniz alındı. Ödeme sayfasına yönlendiriliyorsunuz...';
+                showModal("Başarılı", "Siparişiniz alındı. Ödeme sayfasına yönlendiriliyorsunuz...");
 
+                // 3. Müşteriyi PayTR linkine yönlendir
                 setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 3000);
+                    window.location.href = paytrLink; // İndex'e değil, PayTR linkine yönlendir
+                }, 2000); // 2 saniye bekle
 
             } catch (error) {
                 console.error("Sipariş oluşturma hatası:", error);
