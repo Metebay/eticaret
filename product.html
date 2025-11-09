@@ -305,7 +305,8 @@
                     const finalProduct = {
                         ...product,
                         price: price, 
-                        discount: discount
+                        discount: discount,
+                        paytrLink: product.paytrLink || "" // YENİ: PayTR linkini sepete eklenecek ürüne dahil et
                     };
                     addToCart(productId, finalProduct);
                 });
