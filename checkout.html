@@ -7,18 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="./assets/PAFA TEAMSPORT LOGO.png" type="image/x-icon">
 </head>
-<body class="bg-gray-100 font-sans text-gray-800">
+<body data-page-id="checkout">
 
     <!-- Header Yükleme Alanı -->
     <div id="header-placeholder"></div>
 
-    <main class="container mx-auto px-6 py-8 min-h-screen">
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Siparişi Onayla</h1>
+    <main class="container mx-auto px-4 py-8 min-h-screen">
+        <h1 class="text-4xl font-black text-gray-900 mb-8 text-center">Siparişi Onayla</h1>
         
         <div id="checkout-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <!-- Teslimat Bilgileri (Sol Taraf) -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-2xl p-6 md:p-8 border border-gray-200">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Teslimat Bilgileri</h2>
                 <form id="checkout-form" class="space-y-6">
                     <div>
@@ -46,7 +46,7 @@
 
             <!-- Sipariş Özeti (Sağ Taraf) -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl shadow-2xl p-6 sticky top-28 border border-gray-200">
+                <div class="bg-white rounded-xl shadow-xl p-6 sticky top-28 border border-gray-200">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Sipariş Özeti</h2>
                     
                     <div id="checkout-summary-items" class="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
@@ -59,23 +59,20 @@
                             <span id="summary-total" class="text-emerald-600">0.00 TL</span>
                         </div>
                         
-                        <button type="submit" form="checkout-form" id="confirm-order-btn" class="w-full text-center bg-emerald-500 text-white py-3 px-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition duration-150 shadow-md">
+                        <button type="submit" form="checkout-form" id="confirm-order-btn" class="w-full text-center btn-primary text-white py-3 px-4 rounded-xl font-bold text-lg transition duration-150 shadow-md">
                             Ödemeyi Tamamla ve Siparişi Ver
                         </button>
-                        <p class="text-xs text-gray-500 mt-4 text-center">
-                            Not: Bu bir demo sitedir. Gerçek bir ödeme alınmayacaktır. Siparişiniz "Beklemede" olarak sisteme kaydedilecektir.
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Mesaj Modalı -->
-        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 shadow-xl max-w-sm w-full">
+        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl p-8 shadow-2xl max-w-sm w-full">
                 <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h3>
                 <p id="modal-message" class="text-gray-700 mb-6"></p>
-                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-2 rounded-md hover:bg-emerald-700 transition duration-200">Tamam</button>
+                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition duration-200 font-bold">Tamam</button>
             </div>
         </div>
     </main>
@@ -96,12 +93,8 @@
         } from './common.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // 1. Auth durumunu kontrol et
-            await initAuthAndNav();
-            // 2. Header/Footer yükle
-            await loadHeaderAndFooter(null); // Aktif link yok
+            await loadHeaderAndFooter(null);
 
-            // 3. Auth ve Sepet Kontrolleri
             if (!currentUser) {
                 showModal("Giriş Gerekli", "Siparişi onaylamak için lütfen giriş yapın.");
                 setTimeout(() => window.location.href = './auth.html', 2000);
@@ -115,7 +108,6 @@
                 return;
             }
 
-            // 4. Sayfayı yükle
             loadCheckoutSummary(cart);
             setupCheckoutForm(cart);
         });
@@ -139,8 +131,6 @@
             });
 
             document.getElementById('summary-total').textContent = `${totalPrice.toFixed(2)} TL`;
-
-            // Kullanıcı bilgilerini forma doldur (eğer varsa)
             document.getElementById('name').value = currentUser.name || '';
         }
 
@@ -156,19 +146,12 @@
 
                 try {
                     const totalPrice = getCartTotalPrice();
-                    
-                    // Not: PayTR link mantığı burada devreye girebilir.
-                    // Şimdilik sadece siparişi kaydediyoruz.
-                    
                     await createOrder(cart, totalPrice);
-
-                    // Sipariş başarılı
                     saveCart([]); // Sepeti temizle
                     showModal("Sipariş Başarılı!", "Siparişiniz başarıyla alındı. Siparişlerim sayfanıza yönlendiriliyorsunuz.");
                     setTimeout(() => window.location.href = './my-orders.html', 2000);
 
                 } catch (error) {
-                    console.error("Sipariş verme hatası:", error);
                     showModal("Hata", `Sipariş oluşturulurken bir hata oluştu: ${error.message}`);
                     submitBtn.disabled = false;
                     submitBtn.textContent = "Ödemeyi Tamamla ve Siparişi Ver";
