@@ -690,3 +690,13 @@ export function startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsEl
     update(); // Hemen çalıştır
     const interval = setInterval(update, 1000);
 }
+
+/**
+ * Admin Panelinde sipariş detaylarını göster/gizle
+ */
+window.toggleOrderDetails = (orderId) => {
+    const detailsEl = document.getElementById(`order-details-${orderId}`);
+    if (detailsEl) {
+        detailsEl.classList.toggle('hidden');
+    }
+}
