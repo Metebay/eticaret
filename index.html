@@ -3,87 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAFA TEAMSPORT - Ana Sayfa</title>
+    <title>PAFA TEAMSPORT - Spor Malzemelerinde Lider</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="./assets/PAFA TEAMSPORT LOGO.png" type="image/x-icon">
-    <!-- Header/Footer ve Stil dosyaları artık common.js tarafından yüklenecek -->
+    <!-- Stil, Fontlar ve Header/Footer common.js tarafından yüklenecek -->
 </head>
-<body class="bg-gray-100 font-sans text-gray-800">
+<body>
 
     <!-- Header Yükleme Alanı -->
     <div id="header-placeholder"></div>
 
-
-    <main class="container mx-auto px-6 py-8 min-h-screen">
+    <main class="overflow-hidden">
         <!-- Hero Section -->
-        <section class="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg shadow-xl p-8 md:p-16 mb-12 flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12 relative overflow-hidden">
-            <div class="absolute inset-0 bg-pattern opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.2\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');"></div>
-            
-            <div class="relative z-10 text-center md:text-left">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg">
-                    Performansınızı Yükseltin!
-                </h1>
-                <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto md:mx-0 opacity-90">
-                    PAFA TEAMSPORT ile en yeni formalara, ayakkabılara ve spor aksesuarlarına ulaşın. Şampiyonluk ruhu burada başlıyor!
-                </p>
-                <a href="./products.html" class="inline-block bg-white text-emerald-700 px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-all duration-300 shadow-lg transform hover:scale-105">
-                    Hemen Alışverişe Başla
-                </a>
-            </div>
-            <div class="relative z-10">
-                <!-- assets'te böyle bir dosya olduğunu varsayıyoruz -->
-                <img src="https://i.hizliresim.com/6422l6n.png" alt="Futbolcu Koşuyor" class="w-64 md:w-96 drop-shadow-xl">
+        <section class="gradient-bg text-white py-16 md:py-24 relative overflow-hidden">
+            <div class="absolute inset-0 bg-pattern opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-1/2 mb-12 md:mb-0 text-center md:text-left">
+                        <div class="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+                            <span class="text-sm font-medium">Spor Malzemelerinde Lider</span>
+                        </div>
+                        <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6 text-shadow">
+                            Sporun <span class="text-emerald-300">En İyi</span> Adresi
+                        </h1>
+                        <p class="text-xl md:text-2xl mb-8 max-w-2xl opacity-90 leading-relaxed">
+                            Profesyonel sporcuların tercihi PAFA TEAMSPORT ile en kaliteli spor ekipmanlarına ulaşın.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="./products.html" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center">
+                                <span>Hemen Alışverişe Başla</span>
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 flex justify-center">
+                        <img src="https://i.hizliresim.com/6422l6n.png" alt="Futbolcu Koşuyor" class="w-80 md:w-96 relative z-10">
+                    </div>
+                </div>
             </div>
         </section>
         
-        <!-- Kategoriler -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Kategoriler</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                <a href="./products.html?category=forma" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center p-6 text-center group">
-                    <img src="https://i.hizliresim.com/crnrw0p.jpg" alt="Formalar" class="w-24 h-24 mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <h3 class="text-xl font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-200">Formalar</h3>
-                </a>
-                <a href="./products.html?category=ayakkabi" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center p-6 text-center group">
-                    <img src="https://i.hizliresim.com/lmy1frq.jpg" alt="Ayakkabılar" class="w-24 h-24 mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <h3 class="text-xl font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-200">Ayakkabılar</h3>
-                </a>
-                <a href="./products.html?category=top" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center p-6 text-center group">
-                    <img src="https://i.hizliresim.com/me5tu0s.jpg" alt="Toplar" class="w-24 h-24 mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <h3 class="text-xl font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-200">Toplar</h3>
-                </a>
-                <a href="./products.html?category=aksesuar" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center p-6 text-center group">
-                    <img src="https://i.hizliresim.com/b5q1vsk.jpg" alt="Aksesuarlar" class="w-24 h-24 mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <h3 class="text-xl font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-200">Aksesuarlar</h3>
-                </a>
+        <!-- Flash Sale Section -->
+        <section class="py-16 bg-gradient-to-r from-rose-600 to-amber-500 text-white relative overflow-hidden">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
+                        <h2 class="text-4xl md:text-5xl font-black mb-4">Flaş İndirimler!</h2>
+                        <p class="text-xl mb-6 opacity-90 max-w-lg">Seçili ürünlerde geçici süreliğine <span class="font-bold">%50'ye varan indirimler!</span></p>
+                        <!-- Countdown Timer -->
+                        <div class="countdown-timer inline-flex items-center space-x-4 mb-6" id="flash-sale-countdown">
+                            <div class="timer-unit text-center"><div class="text-2xl font-black" id="countdown-days">00</div><div class="text-xs opacity-80">Gün</div></div>
+                            <div class="text-xl font-bold">:</div>
+                            <div class="timer-unit text-center"><div class="text-2xl font-black" id="countdown-hours">00</div><div class="text-xs opacity-80">Saat</div></div>
+                            <div class="text-xl font-bold">:</div>
+                            <div class="timer-unit text-center"><div class="text-2xl font-black" id="countdown-minutes">00</div><div class="text-xs opacity-80">Dakika</div></div>
+                            <div class="text-xl font-bold">:</div>
+                            <div class="timer-unit text-center"><div class="text-2xl font-black" id="countdown-seconds">00</div><div class="text-xs opacity-80">Saniye</div></div>
+                        </div>
+                        <div>
+                             <a href="./products.html" class="inline-flex items-center bg-white text-rose-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-lg">
+                                <span>İndirimli Ürünler</span>
+                                <i class="fas fa-bolt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Flaş İndirim Ürünü -->
+                    <div class="md:w-1/2 flex justify-center">
+                         <div class="relative z-10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="relative mb-4">
+                                    <img src="https://i.hizliresim.com/6422l6n.png" alt="Flaş İndirim" class="w-48 h-48 object-cover rounded-xl">
+                                    <div class="absolute -top-2 -right-2 discount-tag text-white px-3 py-1 rounded-lg font-bold text-sm">%50</div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Nike Mercurial Superfly</h3>
+                                <div class="flex items-center justify-center space-x-2">
+                                    <span class="text-lg font-bold">₺899</span>
+                                    <span class="text-lg text-gray-300 price-slash">₺1799</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <style>
+                .countdown-timer { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); border-radius: 12px; padding: 16px; }
+                .timer-unit { background: rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 8px; min-width: 60px; }
+                .discount-tag { background: linear-gradient(45deg, #ef4444, #dc2626); transform: rotate(-5deg); }
+            </style>
+        </section>
+        
+        <!-- Kategoriler -->
+        <section id="categories" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-4">Kategoriler</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto text-lg">Spor ihtiyaçlarınız için geniş ürün yelpazemiz.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <!-- Kategori Kartları -->
+                    <a href="./products.html?category=forma" class="category-card rounded-2xl p-8 flex flex-col items-center text-center group">
+                        <div class="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mb-6"><img src="https://i.hizliresim.com/crnrw0p.jpg" alt="Formalar" class="w-16 h-16 rounded-full object-cover"></div>
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-emerald-600">Formalar</h3>
+                    </a>
+                    <a href="./products.html?category=ayakkabi" class="category-card rounded-2xl p-8 flex flex-col items-center text-center group">
+                        <div class="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mb-6"><img src="https://i.hizliresim.com/lmy1frq.jpg" alt="Ayakkabılar" class="w-16 h-16 rounded-full object-cover"></div>
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-emerald-600">Ayakkabılar</h3>
+                    </a>
+                    <a href="./products.html?category=top" class="category-card rounded-2xl p-8 flex flex-col items-center text-center group">
+                        <div class="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mb-6"><img src="https://i.hizliresim.com/me5tu0s.jpg" alt="Toplar" class="w-16 h-16 rounded-full object-cover"></div>
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-emerald-600">Toplar</h3>
+                    </a>
+                    <a href="./products.html?category=aksesuar" class="category-card rounded-2xl p-8 flex flex-col items-center text-center group">
+                        <div class="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mb-6"><img src="https://i.hizliresim.com/b5q1vsk.jpg" alt="Aksesuarlar" class="w-16 h-16 rounded-full object-cover"></div>
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-emerald-600">Aksesuarlar</h3>
+                    </a>
+                </div>
+            </div>
+             <style>
+                .category-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%); border: 1px solid #e2e8f0; }
+                .category-card:hover { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: translateY(-10px); border-color: var(--primary); }
+            </style>
         </section>
 
         <!-- Öne Çıkan Ürünler -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Öne Çıkan Ürünler</h2>
-            <div id="featured-products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-600 col-span-full">
-                    <p>Ürünler yükleniyor...</p>
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-4">Öne Çıkan Ürünler</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto text-lg">En çok tercih edilen ve yeni gelen ürünlerimiz</p>
+                </div>
+                <div id="featured-products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Ürünler buraya yüklenecek -->
+                    <div class="loading-placeholder col-span-full text-center text-gray-500">
+                        <p>Öne çıkan ürünler yükleniyor...</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Hakkımızda Kısa Bilgi -->
-        <section class="bg-gray-200 rounded-lg p-8 text-center shadow-md">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">PAFA TEAMSPORT Farkı</h2>
-            <p class="text-gray-700 text-lg max-w-3xl mx-auto mb-6">
-                Yılların deneyimiyle spor dünyasına yön veriyor, her seviyeden sporcuya ilham kaynağı oluyoruz. En yeni teknolojileri ve dayanıklı malzemeleri bir araya getirerek, sahadaki performansınızı en üst düzeye çıkarmanız için çalışıyoruz.
-            </p>
-            <a href="./products.html" class="inline-block bg-emerald-600 text-white px-6 py-3 rounded-md hover:bg-emerald-700 transition duration-200 font-semibold">Tüm Ürünleri Gör</a>
-        </section>
-
-        <!-- Mesaj Modalı (common.js tarafından kontrol edilir) -->
-        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 shadow-xl max-w-sm w-full">
+        <!-- Mesaj Modalı (Yeni Tasarım) -->
+        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl p-8 shadow-2xl max-w-sm w-full">
                 <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h3>
                 <p id="modal-message" class="text-gray-700 mb-6"></p>
-                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-2 rounded-md hover:bg-emerald-700 transition duration-200">Tamam</button>
+                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition duration-200 font-bold">Tamam</button>
             </div>
         </div>
     </main>
@@ -98,7 +161,8 @@
             productsCollection, 
             query, 
             getDocs, 
-            createProductCard 
+            createProductCard,
+            startCountdown
         } from './common.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -108,14 +172,25 @@
             await loadHeaderAndFooter('index');
             // 3. Sayfa içeriğini yükle
             loadFeaturedProducts();
+            
+            // 4. Countdown'ı Başlat
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 2); // 2 gün sonraya ayarla
+            startCountdown(
+                targetDate,
+                document.getElementById('countdown-days'),
+                document.getElementById('countdown-hours'),
+                document.getElementById('countdown-minutes'),
+                document.getElementById('countdown-seconds')
+            );
         });
 
         async function loadFeaturedProducts() {
             const featuredProductsList = document.getElementById('featured-products-list');
-            featuredProductsList.innerHTML = '<div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-600 col-span-full"><p>Öne çıkan ürünler yükleniyor...</p></div>';
+            featuredProductsList.innerHTML = '<div class="loading-placeholder col-span-full text-center text-gray-500"><p>Öne çıkan ürünler yükleniyor...</p></div>';
 
             try {
-                const q = query(productsCollection); // Normalde burada isFeatured: true gibi bir where koşulu olur
+                const q = query(productsCollection);
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
@@ -131,12 +206,10 @@
 
             } catch (error) {
                 console.error("Öne çıkan ürünler yüklenirken hata oluştu:", error);
-                featuredProductsList.innerHTML = `
-                    <div class="col-span-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                featuredProductsList.innerHTML = `<div class="col-span-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative" role="alert">
                         <strong class="font-bold">Hata!</strong>
                         <span class="block sm:inline">Ürünleriniz yüklenirken bir sorun oluştu: ${error.message}</span>
-                    </div>
-                `;
+                    </div>`;
             }
         }
     </script>
