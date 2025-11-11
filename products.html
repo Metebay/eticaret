@@ -7,36 +7,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="./assets/PAFA TEAMSPORT LOGO.png" type="image/x-icon">
 </head>
-<body class="bg-gray-100 font-sans text-gray-800">
+<body data-page-id="products">
 
     <!-- Header Yükleme Alanı -->
     <div id="header-placeholder"></div>
 
-    <main class="container mx-auto px-6 py-8 min-h-screen">
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-4 text-center">Tüm Ürünler</h1>
+    <main class="container mx-auto px-4 py-8 min-h-screen">
+        <h1 class="text-4xl font-black text-gray-900 mb-4 text-center">Tüm Ürünler</h1>
         
         <!-- Kategori Filtreleri -->
         <div id="category-filters" class="flex flex-wrap justify-center gap-3 mb-10">
-            <a href="./products.html" data-category="all" class="category-btn text-sm font-medium px-4 py-2 rounded-full transition duration-150">Tümü</a>
-            <a href="./products.html?category=forma" data-category="forma" class="category-btn text-sm font-medium px-4 py-2 rounded-full transition duration-150">Formalar</a>
-            <a href="./products.html?category=ayakkabi" data-category="ayakkabi" class="category-btn text-sm font-medium px-4 py-2 rounded-full transition duration-150">Ayakkabılar</a>
-            <a href="./products.html?category=aksesuar" data-category="aksesuar" class="category-btn text-sm font-medium px-4 py-2 rounded-full transition duration-150">Aksesuarlar</a>
-            <a href="./products.html?category=top" data-category="top" class="category-btn text-sm font-medium px-4 py-2 rounded-full transition duration-150">Toplar</a>
+            <a href="./products.html" data-category="all" class="category-btn text-sm font-medium px-5 py-2 rounded-full transition duration-150 shadow-sm bg-white text-gray-700 hover:bg-gray-200">Tümü</a>
+            <a href="./products.html?category=forma" data-category="forma" class="category-btn text-sm font-medium px-5 py-2 rounded-full transition duration-150 shadow-sm bg-white text-gray-700 hover:bg-gray-200">Formalar</a>
+            <a href="./products.html?category=ayakkabi" data-category="ayakkabi" class="category-btn text-sm font-medium px-5 py-2 rounded-full transition duration-150 shadow-sm bg-white text-gray-700 hover:bg-gray-200">Ayakkabılar</a>
+            <a href="./products.html?category=aksesuar" data-category="aksesuar" class="category-btn text-sm font-medium px-5 py-2 rounded-full transition duration-150 shadow-sm bg-white text-gray-700 hover:bg-gray-200">Aksesuarlar</a>
+            <a href="./products.html?category=top" data-category="top" class="category-btn text-sm font-medium px-5 py-2 rounded-full transition duration-150 shadow-sm bg-white text-gray-700 hover:bg-gray-200">Toplar</a>
         </div>
 
         <!-- Ürün Listesi -->
-        <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-600 col-span-full">
+        <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="loading-placeholder col-span-full text-center text-gray-500">
                 <p>Ürünler yükleniyor...</p>
             </div>
         </div>
 
         <!-- Mesaj Modalı -->
-        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 shadow-xl max-w-sm w-full">
+        <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl p-8 shadow-2xl max-w-sm w-full">
                 <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4"></h3>
                 <p id="modal-message" class="text-gray-700 mb-6"></p>
-                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-2 rounded-md hover:bg-emerald-700 transition duration-200">Tamam</button>
+                <button onclick="closeModal()" class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition duration-200 font-bold">Tamam</button>
             </div>
         </div>
     </main>
@@ -56,19 +56,12 @@
         } from './common.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // 1. Auth durumunu kontrol et
-            await initAuthAndNav();
-            // 2. Header/Footer yükle
             await loadHeaderAndFooter('products');
             
-            // 3. URL'den kategori al ve ürünleri yükle
             const urlParams = new URLSearchParams(window.location.search);
             const category = urlParams.get('category');
             
-            // 4. Aktif kategori butonunu ayarla
             setActiveCategory(category);
-            
-            // 5. Ürünleri yükle
             loadProducts(category);
         });
 
@@ -76,24 +69,25 @@
             const currentCategory = category || 'all';
             document.querySelectorAll('.category-btn').forEach(btn => {
                 if (btn.dataset.category === currentCategory) {
-                    btn.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
+                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-200');
+                    btn.classList.add('bg-emerald-600', 'text-white', 'shadow-lg');
                 } else {
                     btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-200');
+                    btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-lg');
                 }
             });
         }
 
         async function loadProducts(category) {
             const productsList = document.getElementById('products-list');
-            productsList.innerHTML = '<div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-600 col-span-full"><p>Ürünler yükleniyor...</p></div>';
+            productsList.innerHTML = '<div class="bg-white p-8 rounded-xl shadow-sm text-center text-gray-600 col-span-full pulse-animation"><div class="loading-spinner mb-4"></div><p>Ürünler yükleniyor...</p></div>';
 
             try {
-                // Kategoriye göre sorgu oluştur
                 let q;
-                if (category) {
+                if (category && category !== 'all') {
                     q = query(productsCollection, where("category", "==", category));
                 } else {
-                    q = query(productsCollection); // Kategori yoksa tümünü getir
+                    q = query(productsCollection);
                 }
                 
                 const querySnapshot = await getDocs(q);
@@ -113,12 +107,10 @@
 
             } catch (error) {
                 console.error("Ürünler yüklenirken hata oluştu:", error);
-                productsList.innerHTML = `
-                    <div class="col-span-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                productsList.innerHTML = `<div class="col-span-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative" role="alert">
                         <strong class="font-bold">Hata!</strong>
-                        <span class="block sm:inline">Ürünler yüklenirken bir sorun oluştu. Lütfen Firebase kurallarınızı kontrol edin.</span>
-                    </div>
-                `;
+                        <span class="block sm:inline">Ürünler yüklenirken bir sorun oluştu.</span>
+                    </div>`;
             }
         }
     </script>
