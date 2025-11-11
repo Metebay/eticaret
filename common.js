@@ -117,7 +117,9 @@ export function addToCart(productId, product) {
     if (existingProductIndex > -1) {
         cart[existingProductIndex].quantity += 1;
     } else {
-        cart.push({ ...product, id: productId, quantity: 1 });
+        // Yeni ürünü eklerken, sadece gerekli alanları al
+        const { name, price, description, images, category, discount } = product;
+        cart.push({ id: productId, name, price, description, images, category, discount, quantity: 1 });
     }
     saveCart(cart);
     showModal("Sepete Eklendi", `${product.name} sepete eklendi!`);
@@ -270,13 +272,14 @@ function updateNavAndAuthUI(currentPageId) {
         try {
             await signOut(auth);
             showModal("Başarılı", "Çıkış yapıldı.");
-            window.location.href = './index.html';
+            // auth.html'e yönlendir, bu sayede oradan tekrar index'e yönlendirilebilir.
+            window.location.href = './index.html'; 
         } catch (error) {
             showModal("Hata", "Çıkış yapılamadı: " + error.message);
         }
     };
     
-    // === Auth Linkleri ===
+    // === Masaüstü Auth Linkleri ===
     const authLinks = document.getElementById('auth-links');
     const userLinks = document.getElementById('user-links');
     const adminLink = document.getElementById('admin-link');
@@ -291,7 +294,7 @@ function updateNavAndAuthUI(currentPageId) {
     const mobileAdminLink = document.getElementById('mobile-admin-link');
 
     
-    // Aktif linki vurgula (Masaüstü ve Mobil)
+    // Aktif linki vurgula (Masaüstü)
     document.querySelectorAll('.nav-link').forEach(a => {
         if (a.dataset.pageId === currentPageId) {
             a.classList.add('text-emerald-600', 'font-semibold', 'border-b-2', 'border-emerald-600');
@@ -300,6 +303,7 @@ function updateNavAndAuthUI(currentPageId) {
         }
     });
     
+    // Aktif linki vurgula (Mobil)
     document.querySelectorAll('.mobile-nav-link').forEach(a => {
         if (a.dataset.pageId === currentPageId) {
             a.classList.add('text-emerald-600', 'font-semibold', 'border-l-4', 'border-emerald-600', 'bg-emerald-50');
@@ -310,24 +314,24 @@ function updateNavAndAuthUI(currentPageId) {
 
     // Auth durumunu güncelle
     if (currentUser) {
-        // Masaüstü
-        if (authLinks) authLinks.classList.add('hidden');
-        if (userLinks) userLinks.classList.remove('hidden');
-        if (userEmailSpan) userEmailSpan.textContent = currentUser.email;
+        // Masaüstü UI
+        if (authLinks) { authLinks.style.display = 'none'; }
+        if (userLinks) { userLinks.style.display = 'flex'; }
+        if (userEmailSpan) { userEmailSpan.textContent = currentUser.email; }
 
-        // Mobil
-        if (mobileAuthLinks) mobileAuthLinks.classList.add('hidden');
-        if (mobileUserLinks) mobileUserLinks.classList.remove('hidden');
-        if (mobileUserEmail) mobileUserEmail.textContent = currentUser.email;
+        // Mobil UI
+        if (mobileAuthLinks) { mobileAuthLinks.style.display = 'none'; }
+        if (mobileUserLinks) { mobileUserLinks.style.display = 'flex'; }
+        if (mobileUserEmail) { mobileUserEmail.textContent = currentUser.email; }
         
         // Admin linkleri
         const isAdmin = currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL;
         if (isAdmin) {
-            if (adminLink) adminLink.classList.remove('hidden');
-            if (mobileAdminLink) mobileAdminLink.classList.remove('hidden');
+            if (adminLink) { adminLink.classList.remove('hidden'); }
+            if (mobileAdminLink) { mobileAdminLink.classList.remove('hidden'); }
         } else {
-            if (adminLink) adminLink.classList.add('hidden');
-            if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
+            if (adminLink) { adminLink.classList.add('hidden'); }
+            if (mobileAdminLink) { mobileAdminLink.classList.add('hidden'); }
         }
 
         // Çıkış Butonları
@@ -335,17 +339,17 @@ function updateNavAndAuthUI(currentPageId) {
         if (mobileLogoutButton) mobileLogoutButton.onclick = logoutHandler;
 
     } else {
-        // Masaüstü
-        if (authLinks) authLinks.classList.remove('hidden');
-        if (userLinks) userLinks.classList.add('hidden');
+        // Masaüstü UI
+        if (authLinks) { authLinks.style.display = 'flex'; }
+        if (userLinks) { userLinks.style.display = 'none'; }
         
-        // Mobil
-        if (mobileAuthLinks) mobileAuthLinks.classList.remove('hidden');
-        if (mobileUserLinks) mobileUserLinks.classList.add('hidden');
+        // Mobil UI
+        if (mobileAuthLinks) { mobileAuthLinks.style.display = 'flex'; }
+        if (mobileUserLinks) { mobileUserLinks.style.display = 'none'; }
 
         // Admin linkleri
-        if (adminLink) adminLink.classList.add('hidden');
-        if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
+        if (adminLink) { adminLink.classList.add('hidden'); }
+        if (mobileAdminLink) { mobileAdminLink.classList.add('hidden'); }
     }
     
     updateCartCount();
@@ -505,6 +509,11 @@ function injectGlobalStyles() {
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        /* Header Logo styles for dark background */
+        .footer-logo {
+            filter: brightness(0) invert(1);
+        }
     `;
     document.head.appendChild(style);
 }
@@ -581,7 +590,7 @@ export function createProductCard(product, productId) {
     const discountedPrice = price * (1 - (discount / 100));
 
     return `
-        <div class="product-card bg-white shadow-lg hover:shadow-2xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 group">
+        <div class="product-card bg-white shadow-lg hover:shadow-2xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 group rounded-xl">
             <div class="product-image-container relative">
                 <a href="./product.html?id=${productId}">
                     <img src="${product.images[0] || 'https://placehold.co/400x300/e0f2f1/047857?text=PAFA'}" 
@@ -663,9 +672,10 @@ export async function createOrder(cart, totalPrice) {
 export function startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsEl) {
     if (!targetDate || !daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
-    function update() {
+    // Hedef tarihin Date nesnesi olduğunu varsayalım (targetDate)
+    const interval = setInterval(() => {
         const now = new Date().getTime();
-        const distance = targetDate - now;
+        const distance = targetDate.getTime() - now;
 
         if (distance < 0) {
             daysEl.textContent = '00';
@@ -685,10 +695,7 @@ export function startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsEl
         hoursEl.textContent = hours.toString().padStart(2, '0');
         minutesEl.textContent = minutes.toString().padStart(2, '0');
         secondsEl.textContent = seconds.toString().padStart(2, '0');
-    }
-
-    update(); // Hemen çalıştır
-    const interval = setInterval(update, 1000);
+    }, 1000);
 }
 
 /**
