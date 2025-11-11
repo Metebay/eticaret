@@ -1,4 +1,4 @@
-// --- PAFA TEAMSPORT E-TICARET COMMON.JS (SON HALİ - HATA GİDERİLMİŞ) ---
+// --- PAFA TEAMSPORT E-TICARET COMMON.JS (SON VE OPTİMİZE EDİLMİŞ VERSİYON) ---
 
 // === 1. FIREBASE SDK IMPORTS ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
@@ -33,7 +33,6 @@ import {
 const firebaseConfig = {
     apiKey: "AIzaSyCcpgbcbHqMjkyxVmRllLj5ZV1yljMhsPk",
     authDomain: "whatsapp-415e2.firebaseapp.com",
-    databaseURL: "https://whatsapp-415e2-default-rtdb.firebaseio.com",
     projectId: "whatsapp-415e2",
     storageBucket: "whatsapp-415e2.firebasestorage.app",
     messagingSenderId: "632645198033",
@@ -43,9 +42,9 @@ const firebaseConfig = {
 
 // Global Firebase değişkenleri
 let app, auth, db, analytics;
-export let currentUser = null; // Aktif kullanıcıyı (auth + firestore verisi) tutar
-export let isAuthReady = false; // Auth durumunun ilk kontrolü yapıldı mı?
-const ADMIN_EMAIL = "admin@e-ticaret.com"; // Admin e-postası
+export let currentUser = null; 
+export let isAuthReady = false; 
+const ADMIN_EMAIL = "admin@e-ticaret.com"; 
 
 // Koleksiyon referansları
 export let productsCollection, ordersCollection, usersCollection;
@@ -57,12 +56,11 @@ try {
     auth = getAuth(app);
     db = getFirestore(app);
 
-    // Koleksiyon referanslarını ayarla
     productsCollection = collection(db, "products");
     ordersCollection = collection(db, "orders");
     usersCollection = collection(db, "users");
     
-    // CSS Değişkenlerini ve Stilleri Ekle (Tüm sayfalarda tutarlılık için)
+    // CSS Değişkenlerini ve Stilleri Ekle
     const styleSheet = document.createElement("style");
     styleSheet.textContent = `
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -167,12 +165,12 @@ export function showModal(title, message, type = 'success') {
     if (messageEl) messageEl.textContent = message;
     
     // Tip'e göre stil (opsiyonel)
-    const iconContainer = modal.querySelector('.modal-icon-container'); // Örnek
+    const iconContainer = modal.querySelector('.modal-icon-container');
     if (iconContainer) {
         if (type === 'error') {
-            iconContainer.innerHTML = `<i class="fas fa-times text-red-500"></i>`; // Örnek
+            iconContainer.innerHTML = `<i class="fas fa-times text-red-500"></i>`;
         } else {
-            iconContainer.innerHTML = `<i class="fas fa-check text-emerald-500"></i>`; // Örnek
+            iconContainer.innerHTML = `<i class="fas fa-check text-emerald-500"></i>`;
         }
     }
     
@@ -205,7 +203,6 @@ export async function loadHeaderAndFooter(currentPageId) {
         if (headerPlaceholder) {
             const res = await fetch('_header.html');
             if (!res.ok) {
-                // Header dosyası bulunamazsa (404) veya başka bir hata olursa
                 throw new Error(`_header.html yüklenemedi. HTTP Durum: ${res.status} ${res.statusText}. Dosyanın kök dizinde var olduğunu kontrol edin.`);
             }
             headerPlaceholder.innerHTML = await res.text();
@@ -215,7 +212,6 @@ export async function loadHeaderAndFooter(currentPageId) {
         if (footerPlaceholder) {
             const res = await fetch('_footer.html');
             if (!res.ok) {
-                 // Footer dosyası bulunamazsa (404) veya başka bir hata olursa
                 throw new Error(`_footer.html yüklenemedi. HTTP Durum: ${res.status} ${res.statusText}. Dosyanın kök dizinde var olduğunu kontrol edin.`);
             }
             footerPlaceholder.innerHTML = await res.text();
@@ -1349,7 +1345,8 @@ export async function deleteProduct(productId) {
 export { 
     auth, db, 
     // Fonksiyonlar
-    $loadFeaturedProducts, // Yeni isim
+    $loadFeaturedProducts, 
+    $startCountdown, // Tekrar export edildi
     getDocs, query, where, doc, getDoc, 
     updateDoc, deleteDoc, addDoc, setDoc, Timestamp,
     arrayUnion, arrayRemove
