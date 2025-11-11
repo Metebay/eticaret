@@ -1,4 +1,4 @@
-// --- PAFA TEAMSPORT E-TICARET COMMON.JS (SON HALİ) ---
+// --- PAFA TEAMSPORT E-TICARET COMMON.JS (SON HALİ - HATA GİDERİLMİŞ) ---
 
 // === 1. FIREBASE SDK IMPORTS ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
@@ -336,7 +336,6 @@ function updateNavAndAuthUI(currentPageId) {
 
 /**
  * Header'daki (mega menü, mobil menü) JS özelliklerini başlatır.
- * NOT: Sayaç başlatma işlevi buradan $startCountdown olarak dışarı taşındı.
  */
 function initHeaderFeatures() {
     // 1. Mobil Menü Toggle
@@ -381,6 +380,8 @@ function initHeaderFeatures() {
 export function $startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsEl) {
     if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
     
+    let countdownInterval;
+
     function updateCountdown() {
         const now = new Date().getTime();
         const distance = targetDate - now;
@@ -407,7 +408,7 @@ export function $startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsE
     }
     
     updateCountdown();
-    const countdownInterval = setInterval(updateCountdown, 1000);
+    countdownInterval = setInterval(updateCountdown, 1000);
 }
 
 /**
@@ -467,7 +468,7 @@ export async function saveAddress(addressData) {
     // Adrese benzersiz bir ID ata
     const addressWithId = { ...addressData, id: crypto.randomUUID() };
 
-    // Eğer bu, kullanıcının ilk adresi VEYA "varsayılan" olarak işaretlendiyse,
+    // Eğer bu, kullanıcının ilk adresi VEYE "varsayılan" olarak işaretlendiyse,
     // diğer tüm adreslerin 'isDefault' bayrağını kaldır.
     if (addressWithId.isDefault) {
         const userDoc = await getDoc(userDocRef);
@@ -1349,7 +1350,6 @@ export {
     auth, db, 
     // Fonksiyonlar
     $loadFeaturedProducts, // Yeni isim
-    $startCountdown, // Yeni export
     getDocs, query, where, doc, getDoc, 
     updateDoc, deleteDoc, addDoc, setDoc, Timestamp,
     arrayUnion, arrayRemove
