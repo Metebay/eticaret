@@ -205,7 +205,7 @@ export async function loadHeaderAndFooter(currentPageId) {
     try {
         // Header'ı yükle
         if (headerPlaceholder) {
-            const res = await fetch('_header.html');
+            const res = await fetch('./_header.html');
             if (!res.ok) throw new Error('Header yüklenemedi');
             const headerHtml = await res.text();
             headerPlaceholder.innerHTML = headerHtml;
