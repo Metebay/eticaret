@@ -1,6 +1,6 @@
 /**
  * Ortak JavaScript Mantığı: Firebase Bağlantısı, Sepet Fonksiyonları, Kimlik Doğrulama ve Ortak UI İşlemleri.
- * YENİ TASARIM (index (2).html) ile tam entegre.
+ * YENİ PAFA TEAMSPORT TASARIMINA (Mega Menü, Yeni Stiller, Sayaç) göre güncellendi.
  * Tüm HTML sayfaları tarafından import edilir.
  */
 
@@ -77,7 +77,6 @@ try {
 // === 2. MODAL (BİLDİRİM) FONKSİYONLARI ===
 
 export function showModal(title, message) {
-    // Yeni tasarımdaki modal'ı hedefle
     const modal = document.getElementById('message-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalMessage = document.getElementById('modal-message');
@@ -153,10 +152,10 @@ export function getCartTotalPrice() {
 }
 
 export function updateCartCount() {
-    // Hem masaüstü hem mobil sepetteki sayıları güncelle
     const cart = getCart();
     const count = cart.reduce((total, item) => total + item.quantity, 0);
     
+    // Yeni tasarımdaki tüm .cart-badge-count öğelerini güncelle
     document.querySelectorAll('.cart-badge-count').forEach(el => {
         if (count > 0) {
             el.textContent = count;
@@ -168,9 +167,12 @@ export function updateCartCount() {
     });
 }
 
-// === 4. OPTİMİZASYON: HEADER/FOOTER YÜKLEYİCİ ===
+// === 4. OPTİMİZASYON: HEADER/FOOTER YÜKLEYİCİ VE STİL ===
 
 export async function loadHeaderAndFooter(currentPageId) {
+    // Önce Auth durumunun bitmesini bekliyoruz (Race Condition'ı çözer)
+    await initAuthAndNav();
+    
     const headerPlaceholder = document.getElementById('header-placeholder');
     const footerPlaceholder = document.getElementById('footer-placeholder');
 
@@ -192,13 +194,13 @@ export async function loadHeaderAndFooter(currentPageId) {
 
         // --- Header/Footer yüklendikten SONRA çalışması gereken JS'ler ---
         
-        // 1. Gerekli stilleri enjekte et
+        // 1. Gerekli CSS/Fontları enjekte et (Yeni Ana Sayfadan Alınan Stiller)
         injectGlobalStyles();
         
-        // 2. Auth durumuna göre UI'ı güncelle (GİRİŞ HATASINI ÇÖZER)
+        // 2. Auth durumuna göre UI'ı güncelle
         updateNavAndAuthUI(currentPageId);
         
-        // 3. Yeni Header'ın JS fonksiyonlarını çalıştır
+        // 3. Yeni Header'ın interaktif öğelerini çalıştır
         setupHeaderInteractivity();
 
     } catch (error) {
@@ -263,23 +265,34 @@ function setupHeaderInteractivity() {
  * Navigasyonu ve kullanıcı durumunu günceller.
  */
 function updateNavAndAuthUI(currentPageId) {
-    // === Masaüstü Header ===
+    // === Ortak Elemanlar ===
+    const logoutHandler = async () => {
+        try {
+            await signOut(auth);
+            showModal("Başarılı", "Çıkış yapıldı.");
+            window.location.href = './index.html';
+        } catch (error) {
+            showModal("Hata", "Çıkış yapılamadı: " + error.message);
+        }
+    };
+    
+    // === Auth Linkleri ===
     const authLinks = document.getElementById('auth-links');
     const userLinks = document.getElementById('user-links');
+    const adminLink = document.getElementById('admin-link');
     const userEmailSpan = document.getElementById('user-email');
     const logoutButton = document.getElementById('logout-button');
     
-    // === Mobil Header ===
+    // === Mobil Auth Linkleri ===
     const mobileAuthLinks = document.getElementById('mobile-auth-links');
     const mobileUserLinks = document.getElementById('mobile-user-links');
     const mobileUserEmail = document.getElementById('mobile-user-email');
     const mobileLogoutButton = document.getElementById('mobile-logout-button');
-    
-    const adminLink = document.getElementById('admin-link');
     const mobileAdminLink = document.getElementById('mobile-admin-link');
+
     
-    // Aktif linki vurgula (Masaüstü)
-    document.querySelectorAll('nav a.nav-link').forEach(a => {
+    // Aktif linki vurgula (Masaüstü ve Mobil)
+    document.querySelectorAll('.nav-link').forEach(a => {
         if (a.dataset.pageId === currentPageId) {
             a.classList.add('text-emerald-600', 'font-semibold', 'border-b-2', 'border-emerald-600');
         } else {
@@ -287,8 +300,7 @@ function updateNavAndAuthUI(currentPageId) {
         }
     });
     
-    // Aktif linki vurgula (Mobil)
-    document.querySelectorAll('#mobile-menu a.mobile-nav-link').forEach(a => {
+    document.querySelectorAll('.mobile-nav-link').forEach(a => {
         if (a.dataset.pageId === currentPageId) {
             a.classList.add('text-emerald-600', 'font-semibold', 'border-l-4', 'border-emerald-600', 'bg-emerald-50');
         } else {
@@ -298,54 +310,44 @@ function updateNavAndAuthUI(currentPageId) {
 
     // Auth durumunu güncelle
     if (currentUser) {
-        // === Masaüstü ===
-        authLinks.classList.add('hidden');
-        userLinks.classList.remove('hidden');
-        userEmailSpan.textContent = currentUser.email;
+        // Masaüstü
+        if (authLinks) authLinks.classList.add('hidden');
+        if (userLinks) userLinks.classList.remove('hidden');
+        if (userEmailSpan) userEmailSpan.textContent = currentUser.email;
 
-        // === Mobil ===
-        mobileAuthLinks.classList.add('hidden');
-        mobileUserLinks.classList.remove('hidden');
-        mobileUserEmail.textContent = currentUser.email;
+        // Mobil
+        if (mobileAuthLinks) mobileAuthLinks.classList.add('hidden');
+        if (mobileUserLinks) mobileUserLinks.classList.remove('hidden');
+        if (mobileUserEmail) mobileUserEmail.textContent = currentUser.email;
         
         // Admin linkleri
         const isAdmin = currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL;
         if (isAdmin) {
-            adminLink.classList.remove('hidden');
-            mobileAdminLink.classList.remove('hidden');
+            if (adminLink) adminLink.classList.remove('hidden');
+            if (mobileAdminLink) mobileAdminLink.classList.remove('hidden');
         } else {
-            adminLink.classList.add('hidden');
-            mobileAdminLink.classList.add('hidden');
+            if (adminLink) adminLink.classList.add('hidden');
+            if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
         }
 
         // Çıkış Butonları
-        const handleLogout = async () => {
-            try {
-                await signOut(auth);
-                showModal("Başarılı", "Çıkış yapıldı.");
-                window.location.href = './index.html';
-            } catch (error) {
-                showModal("Hata", "Çıkış yapılamadı: " + error.message);
-            }
-        };
-        logoutButton.onclick = handleLogout;
-        mobileLogoutButton.onclick = handleLogout;
+        if (logoutButton) logoutButton.onclick = logoutHandler;
+        if (mobileLogoutButton) mobileLogoutButton.onclick = logoutHandler;
 
     } else {
-        // === Masaüstü ===
-        authLinks.classList.remove('hidden');
-        userLinks.classList.add('hidden');
+        // Masaüstü
+        if (authLinks) authLinks.classList.remove('hidden');
+        if (userLinks) userLinks.classList.add('hidden');
         
-        // === Mobil ===
-        mobileAuthLinks.classList.remove('hidden');
-        mobileUserLinks.classList.add('hidden');
+        // Mobil
+        if (mobileAuthLinks) mobileAuthLinks.classList.remove('hidden');
+        if (mobileUserLinks) mobileUserLinks.classList.add('hidden');
 
         // Admin linkleri
-        adminLink.classList.add('hidden');
-        mobileAdminLink.classList.add('hidden');
+        if (adminLink) adminLink.classList.add('hidden');
+        if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
     }
     
-    // Sepet sayısını güncelle
     updateCartCount();
 }
 
@@ -369,22 +371,27 @@ function injectGlobalStyles() {
         document.head.appendChild(gFonts);
     }
 
-    // Yeni tasarımın temel stilleri (common.js'e taşındı)
+    // Yeni tasarımın CSS değişkenleri ve stilleri
     const style = document.createElement('style');
     style.textContent = `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
         :root {
-            --primary: #059669;
-            --primary-dark: #047857;
-            --primary-darker: #065f46;
-            --accent: #f59e0b;
-            --light: #f8fafc;
-            --dark: #1e293b;
+            --primary: #059669; /* emerald-600 */
+            --primary-dark: #047857; /* emerald-700 */
+            --primary-darker: #065f46; /* emerald-800 */
+            --accent: #f59e0b; /* amber-500 */
+            --light: #f8fafc; /* gray-50 */
+            --dark: #1e293b; /* gray-800 */
         }
+        
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--light);
+            color: #1e293b; 
             scroll-behavior: smooth;
         }
+        
         .gradient-bg { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--primary-darker) 100%); }
         .gradient-text {
             background: linear-gradient(90deg, var(--primary), var(--accent));
@@ -392,46 +399,33 @@ function injectGlobalStyles() {
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
         .btn-primary {
             background: linear-gradient(to right, var(--primary), var(--primary-dark));
             box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
             transition: all 0.3s ease;
+            color: white;
         }
+        
         .btn-primary:hover {
             background: linear-gradient(to right, var(--primary-dark), var(--primary-darker));
             box-shadow: 0 10px 25px rgba(5, 150, 105, 0.5);
             transform: translateY(-2px);
         }
-        .sticky-header {
-            position: sticky; top: 0; z-index: 100;
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            color: white;
         }
-        .mobile-menu {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
-        .mobile-menu.open { transform: translateX(0); }
-        .cart-badge {
-            position: absolute; top: -8px; right: -8px;
-            background: var(--accent); color: white;
-            border-radius: 50%; width: 20px; height: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 700;
-        }
-        .mega-menu {
-            opacity: 0; visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .mega-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .mega-menu-column h4 { font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 1.1rem; }
-        .mega-menu-column ul li { margin-bottom: 8px; }
-        .mega-menu-column ul li a { color: #4b5563; transition: color 0.2s ease; }
-        .mega-menu-column ul li a:hover { color: var(--primary); }
+        
         .sale-badge {
             position: absolute; top: 12px; right: 12px;
             background: linear-gradient(45deg, #ef4444, #f59e0b);
@@ -439,17 +433,91 @@ function injectGlobalStyles() {
             font-size: 0.75rem; font-weight: 700; z-index: 10;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        
+        .sticky-header {
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            position: fixed; inset: 0; height: 100%; z-index: 101; 
+        }
+        .mobile-menu.open { transform: translateX(0); }
+        
+        .cart-badge {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--accent); color: white;
+            border-radius: 50%; width: 20px; height: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700;
+        }
+        
+        .mega-menu {
+            opacity: 0; visibility: hidden; transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: absolute; left: 0; right: 0; z-index: 90; 
+        }
+        .mega-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-menu-column h4 { font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 1.1rem; }
+        .mega-menu-column ul li { margin-bottom: 8px; }
+        .mega-menu-column ul li a { color: #4b5563; transition: color 0.2s ease; }
+        .mega-menu-column ul li a:hover { color: var(--primary); }
+        
+        .floating-animation { animation: floating 6s ease-in-out infinite; }
+        @keyframes floating {
+            0% { transform: translate(0, 0px) rotate(0deg); }
+            50% { transform: translate(0, -20px) rotate(2deg); }
+            100% { transform: translate(0, -0px) rotate(0deg); }
+        }
+
+        .pulse-animation { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .85; } }
+        
+        .loading-spinner {
+            border: 3px solid rgba(5, 150, 105, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .marquee { animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .discount-tag {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+            transform: rotate(-5deg);
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+        }
         .price-slash { text-decoration: line-through; opacity: 0.7; }
+        
+        /* Eklenen scrollbar stili */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
     `;
     document.head.appendChild(style);
 }
 
 
 // === 5. KİMLİK DOĞRULAMA ÇEKİRDEK İŞLEMLERİ (CORE AUTH) ===
+// (Mantık aynı kalır)
 
 export function initAuthAndNav() {
     return new Promise((resolve) => {
         if (isAuthReady) {
+            // UI'ı sadece auth hazır olunca güncelliyoruz.
+            updateNavAndAuthUI(document.body.getAttribute('data-page-id'));
             resolve();
             return;
         }
@@ -467,6 +535,8 @@ export function initAuthAndNav() {
 
             isAuthReady = true;
             unsubscribe();
+            // Auth tamamlandığı anda UI'ı güncelle
+            updateNavAndAuthUI(document.body.getAttribute('data-page-id'));
             resolve();
         });
     });
@@ -503,17 +573,15 @@ export async function signInUser(email, password) {
 
 
 // === 6. FIREBASE VERİ İŞLEMLERİ ===
+// (Mantık ve createProductCard güncellendi)
 
-/**
- * YENİ TASARIMA UYGUN Ürün kartı HTML'i oluşturur.
- */
 export function createProductCard(product, productId) {
     const price = (product.price || 0);
     const discount = (product.discount || 0);
     const discountedPrice = price * (1 - (discount / 100));
 
     return `
-        <div class="product-card bg-white rounded-xl shadow-lg hover:shadow-2xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 group">
+        <div class="product-card bg-white shadow-lg hover:shadow-2xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 group">
             <div class="product-image-container relative">
                 <a href="./product.html?id=${productId}">
                     <img src="${product.images[0] || 'https://placehold.co/400x300/e0f2f1/047857?text=PAFA'}" 
@@ -589,7 +657,9 @@ export async function createOrder(cart, totalPrice) {
     }
 }
 
-// Countdown Timer (index.html'den taşındı)
+/**
+ * Geri sayım sayacını başlatır (index.html'den taşındı)
+ */
 export function startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsEl) {
     if (!targetDate || !daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
