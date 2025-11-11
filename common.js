@@ -44,8 +44,8 @@ const firebaseConfig = {
 
 // Global Firebase değişkenleri
 let app, auth, db, analytics;
-let currentUser = null; // Aktif kullanıcıyı (auth + firestore verisi) tutar
-let isAuthReady = false; // Auth durumunun ilk kontrolü yapıldı mı?
+export let currentUser = null; // Aktif kullanıcıyı (auth + firestore verisi) tutar
+export let isAuthReady = false; // Auth durumunun ilk kontrolü yapıldı mı?
 const ADMIN_EMAIL = "admin@e-ticaret.com"; // Admin e-postası
 
 // Koleksiyon referansları
@@ -365,7 +365,7 @@ function initHeaderFeatures() {
 
     if (productsMenuTrigger && megaMenu) {
         productsMenuTrigger.addEventListener('mouseenter', () => megaMenu.classList.add('active'));
-        productsMenuTrigger.addEventListener('mouseleave', ()CSS(e) => {
+        productsMenuTrigger.addEventListener('mouseleave', () => {
             // Mouse'un menüye girmesi için kısa bir gecikme
             setTimeout(() => {
                 if (!megaMenu.matches(':hover')) {
@@ -376,40 +376,65 @@ function initHeaderFeatures() {
         megaMenu.addEventListener('mouseleave', () => megaMenu.classList.remove('active'));
     }
     
-    // 3. Flaş İndirim Sayacı
+    // 3. Flaş İndirim Sayacını Başlat (Eğer element varsa)
     const countdownEl = document.getElementById('flash-sale-countdown');
     if (countdownEl) {
         // Hedef tarihi ayarla (Örn: 2 gün sonrası)
         const targetDate = new Date();
         targetDate.setDate(targetDate.getDate() + 2);
         targetDate.setHours(14, 38, 22, 0); // Sabit bir saat
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            if (distance < 0) {
-                // Sayaç bitti
-                countdownEl.innerHTML = "<span class='text-lg font-bold'>Flaş İndirim Sona Erdi!</span>";
-                if(countdownInterval) clearInterval(countdownInterval);
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown-days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
-        }
         
-        updateCountdown(); // İlk çalıştırma
-        const countdownInterval = setInterval(updateCountdown, 1000); // Her saniye güncelle
+        // Sayaç başlatma işlevini doğrudan kullan
+        $startCountdown(
+            targetDate,
+            document.getElementById('countdown-days'),
+            document.getElementById('countdown-hours'),
+            document.getElementById('countdown-minutes'),
+            document.getElementById('countdown-seconds')
+        );
     }
 }
+
+/**
+ * Flaş İndirim Sayacını güncelleyen ve başlatan fonksiyon.
+ * @param {Date} targetDate - Geri sayımın biteceği tarih.
+ * @param {HTMLElement} daysEl - Günler DOM elementi.
+ * @param {HTMLElement} hoursEl - Saatler DOM elementi.
+ * @param {HTMLElement} minutesEl - Dakikalar DOM elementi.
+ * @param {HTMLElement} secondsEl - Saniyeler DOM elementi.
+ */
+export function $startCountdown(targetDate, daysEl, hoursEl, minutesEl, secondsEl) {
+    if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+            // Sayaç bitti
+            if (daysEl.parentElement.parentElement) {
+                 daysEl.parentElement.parentElement.innerHTML = "<span class='text-lg font-bold'>Flaş İndirim Sona Erdi!</span>";
+            }
+            if(countdownInterval) clearInterval(countdownInterval);
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        daysEl.textContent = days.toString().padStart(2, '0');
+        hoursEl.textContent = hours.toString().padStart(2, '0');
+        minutesEl.textContent = minutes.toString().padStart(2, '0');
+        secondsEl.textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    updateCountdown(); // İlk çalıştırma
+    const countdownInterval = setInterval(updateCountdown, 1000); // Her saniye güncelle
+    // Global değişkenler için temizleme yapmayalım, tarayıcı pencere kapandığında temizler
+}
+
 
 /**
  * Yeni kullanıcı kaydı yapar.
@@ -689,7 +714,6 @@ export function createProductCard(product, productId) {
                 </button>
             </div>
             
-            <!-- Hover Info (Opsiyonel) -->
             <div class="product-hover-info">
                  <a href="./product.html?id=${productId}" class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg font-bold transition-all duration-300 text-sm text-center block">
                     Detayları Gör
@@ -707,7 +731,7 @@ window.handleAddToCart = (productId, product) => {
 /**
  * Ana Sayfa (Öne Çıkan Ürünler) yükler.
  */
-export async function loadFeaturedProducts() {
+export async function $loadFeaturedProducts() {
     const featuredProductsList = document.getElementById('featured-products-list');
     if (!featuredProductsList) return;
     
@@ -812,7 +836,6 @@ export async function loadProductDetails(productId) {
 
         const html = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-                <!-- Resim Galerisi -->
                 <div>
                     ${mainImageHtml}
                     <div class="flex space-x-2 overflow-x-auto mt-4 p-1">
@@ -820,7 +843,6 @@ export async function loadProductDetails(productId) {
                     </div>
                 </div>
                 
-                <!-- Ürün Bilgisi -->
                 <div>
                     <span class="text-sm text-gray-500 font-medium">${product.category}</span>
                     <h1 class="text-4xl font-black text-gray-900 mb-4 mt-2">${product.name}</h1>
@@ -1019,7 +1041,7 @@ export async function createOrder(paymentMethod, selectedAddressId) {
 }
 
 
-// === 10. SİPARİŞLERİM (Müşteri) ===
+// === 10. SİPARİŞLERİM (Müşterin) ===
 
 /**
  * Müşterinin kendi siparişlerini yükler.
@@ -1085,7 +1107,6 @@ export async function loadMyOrders() {
 
                 const orderCard = `
                     <div class="bg-white p-6 rounded-xl shadow-lg border animate-fadeInUp">
-                        <!-- Üst Kısım: ID, Tarih, Durum -->
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b">
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900">Sipariş ID: <span class="text-emerald-600">${orderId.substring(0, 10)}...</span></h3>
@@ -1094,7 +1115,6 @@ export async function loadMyOrders() {
                             <span class_="${statusColor} px-3 py-1 text-sm font-bold rounded-full mt-2 sm:mt-0">${order.status}</span>
                         </div>
                         
-                        <!-- Ürünler -->
                         <div class="my-4 space-y-3">
                             ${order.items.map(item => `
                                 <div class="flex items-center space-x-3">
@@ -1107,7 +1127,6 @@ export async function loadMyOrders() {
                             `).join('')}
                         </div>
                         
-                        <!-- Alt Kısım: Adres, Ödeme, Toplam -->
                         <div class="border-t pt-4 space-y-3">
                             <div>
                                 <h4 class="font-semibold text-gray-700">Teslimat Adresi</h4>
@@ -1191,7 +1210,6 @@ export function listenForOrders() {
 
             const orderCard = `
                 <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 animate-fadeInUp">
-                    <!-- Üst Kısım: ID, Tarih, Durum -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b">
                         <div>
                             <h3 class="text-base font-bold text-gray-900">ID: <span class="text-emerald-600">${orderId}</span></h3>
@@ -1201,13 +1219,11 @@ export function listenForOrders() {
                         <span class="${statusColor} px-3 py-1 text-sm font-bold rounded-full mt-2 sm:mt-0">${order.status}</span>
                     </div>
                     
-                    <!-- Detaylar (Açılır/Kapanır) -->
                     <div class="py-4">
                         <button class="text-sm font-medium text-emerald-600 hover:underline" onclick="document.getElementById('details-${orderId}').classList.toggle('hidden')">
                             Detayları Göster/Gizle
                         </button>
                         <div id="details-${orderId}" class="hidden mt-4 space-y-4">
-                            <!-- Ürün Listesi -->
                             <ul class="space-y-2">
                                 ${order.items.map(item => `
                                     <li class="flex items-center space-x-2 text-sm">
@@ -1217,7 +1233,6 @@ export function listenForOrders() {
                                     </li>
                                 `).join('')}
                             </ul>
-                            <!-- Adres ve Ödeme -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                 <div class="bg-gray-50 p-3 rounded-md">
                                     <h4 class="font-semibold text-gray-700">Teslimat Adresi</h4>
@@ -1235,9 +1250,7 @@ export function listenForOrders() {
                         </div>
                     </div>
                     
-                    <!-- Admin Aksiyonları -->
                     <div class="border-t pt-4 space-y-3">
-                        <!-- Durum Güncelleme -->
                         <div class="flex items-center space-x-2">
                             <select id="status-select-${orderId}" class="flex-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm">
                                 <option value="Beklemede" ${order.status === 'Beklemede' ? 'selected' : ''}>Beklemede</option>
@@ -1248,12 +1261,10 @@ export function listenForOrders() {
                             <button class="text-sm bg-emerald-600 text-white px-3 py-2 rounded-md hover:bg-emerald-700" onclick="window.handleUpdateStatus('${orderId}')">Güncelle</button>
                         </div>
                         
-                        <!-- WhatsApp Linki -->
                         <a href="${whatsappLink}" target="_blank" class="block w-full text-center text-sm bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600">
                             <i class="fab fa-whatsapp mr-1"></i> WhatsApp ile İletişime Geç
                         </a>
                         
-                        <!-- Ödeme Linki Alanı -->
                         ${paymentLinkHtml}
                     </div>
                 </div>
@@ -1354,8 +1365,12 @@ export async function deleteProduct(productId) {
 // Gerekli export'lar (HTML dosyalarındaki <script type="module"> için)
 export { 
     auth, db, 
-    currentUser, 
+    // currentUser, // Zaten üstte export edildi
+    // isAuthReady, // Zaten üstte export edildi
+    // productsCollection, // Zaten üstte export edildi
     // Fonksiyonlar
+    $loadFeaturedProducts, // Yeni isim
+    $startCountdown, // Yeni export
     getDocs, query, where, doc, getDoc, 
     updateDoc, deleteDoc, addDoc, setDoc, Timestamp,
     arrayUnion, arrayRemove
