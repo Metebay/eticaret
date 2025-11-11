@@ -1,156 +1,132 @@
-<!-- BU DOSYA BİR PARÇADIR, DOĞRUDAN AÇILMAZ -->
-<!-- YENİ PAFA TEAMSPORT TASARIMINA GÖRE GÜNCELLENDİ (MEGA MENU, MOBİL MENÜ) -->
-
-<!-- Promo Banner -->
 <div class="promo-banner bg-gray-900 text-white py-2 overflow-hidden">
-    <div class="marquee whitespace-nowrap">
-        <span class="inline-block mx-4"><i class="fas fa-shipping-fast mr-2"></i>150 TL ve Üzeri Siparişlerde Ücretsiz Kargo</span>
-        <span class="inline-block mx-4"><i class="fas fa-gift mr-2"></i>İlk Alışverişe Özel %10 İndirim Kodu: PAFA10</span>
-        <span class="inline-block mx-4"><i class="fas fa-undo-alt mr-2"></i>30 Gün İade Garantisi</span>
-    </div>
+    <div class="marquee whitespace-nowrap">
+        <span class="inline-block mx-4"><i class="fas fa-shipping-fast mr-2"></i>150 TL ve Üzeri Siparişlerde Ücretsiz Kargo</span>
+        <span class="inline-block mx-4"><i class="fas fa-gift mr-2"></i>İlk Alışverişe Özel %10 İndirim Kodu: PAFA10</span>
+        <span class="inline-block mx-4"><i class="fas fa-undo-alt mr-2"></i>30 Gün İade Garantisi</span>
+    </div>
 </div>
 
-<!-- Header -->
 <header class="sticky-header">
-    <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-            <!-- Logo -->
-            <div class="logo-container">
-                <a href="./index.html" class="flex items-center">
-                    <!-- Logo görseli placeholder'ı - Projenizdeki assets/PAFA TEAMSPORT LOGO.png'yi kullanacak -->
-                    <img src="./assets/PAFA TEAMSPORT LOGO.png" alt="PAFA TEAMSPORT Logo" class="w-16 h-16 mr-3">
-                </a>
-            </div>
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+                        <div class="logo-container">
+                <a href="./index.html" class="flex items-center">
+                                        <img src="./assets/PAFA TEAMSPORT LOGO.png" alt="PAFA TEAMSPORT Logo" class="w-16 h-16 mr-3">
+                </a>
+            </div>
 
-            <!-- Desktop Navigation -->
-            <nav class="hidden lg:flex items-center space-x-8">
-                <a href="./index.html" data-page-id="index" class="nav-link text-gray-700 hover:text-emerald-600 font-medium transition-colors relative pb-1">Ana Sayfa</a>
-                <a href="./products.html" data-page-id="products" class="nav-link text-gray-700 hover:text-emerald-600 font-medium transition-colors relative pb-1" id="products-menu-trigger">Ürünler</a>
-                <a href="./my-orders.html" data-page-id="my-orders" class="nav-link text-gray-700 hover:text-emerald-600 font-medium transition-colors relative pb-1">Siparişlerim</a>
-                <a href="./admin.html" data-page-id="admin" id="admin-link" class="nav-link hidden text-red-600 hover:text-red-700 font-semibold transition-colors relative pb-1">Admin Paneli</a>
-                <!-- Diğer menü öğeleri (Kategoriler, Markalar vb.) sadece görsel amaçlıydı, ana işlevlere odaklanmak için sabit bırakıldı. -->
-            </nav>
+                        <nav class="hidden lg:flex items-center space-x-8" id="desktop-nav">
+                <a href="./index.html" data-page-id="index" class="nav-link text-gray-700 hover:text-emerald-600 font-medium transition-colors relative pb-1">Ana Sayfa</a>
+                <a href="./products.html" data-page-id="products" class="nav-link text-gray-700 hover:text-emerald-600 font-medium transition-colors relative pb-1" id="products-menu-trigger">Ürünler</a>
+                <a href="./my-orders.html" data-page-id="my-orders" class="nav-link text-gray-700 hover:text-emerald-600 font-medium transition-colors relative pb-1">Siparişlerim</a>
+                <a href="./admin.html" data-page-id="admin" id="admin-link-desktop" class="nav-link hidden text-red-600 hover:text-red-700 font-semibold transition-colors relative pb-1">Admin Paneli</a>
+            </nav>
 
-            <!-- Right Side Actions -->
-            <div class="flex items-center space-x-6">
-                <!-- Search -->
-                <div class="hidden md:block relative">
-                    <input type="text" placeholder="Ürün ara..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent w-48 xl:w-64">
-                    <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
-                </div>
-                
-                <!-- === AUTH BLOĞU (MASAÜSTÜ) === -->
-                <!-- Giriş Yapılmadıysa -->
-                <div id="auth-links" class="hidden md:flex items-center space-x-4">
-                    <a href="./auth.html" data-page-id="auth" class="nav-link text-gray-700 hover:text-emerald-600 transition-colors flex items-center gap-2">
-                        <i class="far fa-user text-xl"></i>
-                        <span class="text-sm font-medium">Giriş Yap / Kayıt Ol</span>
-                    </a>
-                </div>
-                <!-- Giriş Yapıldıysa -->
-                <div id="user-links" class="hidden items-center space-x-4">
-                    <span id="user-email" class="text-sm text-gray-700 font-medium truncate max-w-[100px]"></span>
-                    <button id="logout-button" class="text-red-500 hover:text-red-700 transition-colors">
-                        <i class="fas fa-sign-out-alt text-xl"></i>
-                    </button>
-                </div>
-                <!-- === AUTH BLOĞU BİTİŞ === -->
-
-                <!-- Cart -->
-                <a href="./cart.html" data-page-id="cart" class="nav-link text-gray-700 hover:text-emerald-600 transition-colors relative">
-                    <i class="fas fa-shopping-bag text-xl"></i>
-                    <span class="cart-badge cart-badge-count hidden">0</span>
-                </a>
-                
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="lg:hidden text-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Mega Menu (products.html mantığını desteklemek için basit tutuldu) -->
-    <div class="mega-menu absolute left-0 right-0 bg-white border-t border-gray-200 py-8 z-50" id="mega-menu">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="mega-menu-column">
-                    <h4 class="text-lg font-bold">Kategoriler</h4>
-                    <ul>
-                        <li><a href="./products.html?category=forma">Formalar</a></li>
-                        <li><a href="./products.html?category=ayakkabi">Ayakkabılar</a></li>
-                        <li><a href="./products.html?category=aksesuar">Aksesuarlar</a></li>
-                        <li><a href="./products.html?category=top">Toplar</a></li>
-                    </ul>
-                </div>
-                <div class="mega-menu-column">
-                    <h4 class="text-lg font-bold">Markalar</h4>
-                    <ul>
-                        <li><a href="#">Nike</a></li>
-                        <li><a href="#">Adidas</a></li>
-                        <li><a href="#">Puma</a></li>
-                        <li><a href="#">Tüm Markalar</a></li>
-                    </ul>
-                </div>
-                <div class="mega-menu-column col-span-2">
-                    <img src="https://placehold.co/600x200/059669/white?text=SEZON+KAMPANYASI" alt="Kampanya" class="rounded-lg object-cover w-full">
-                    <h4 class="mt-4 text-base font-bold">Sezon İndirimleri</h4>
-                    <p class="text-sm text-gray-600">Seçili ürünlerde %50'ye varan indirimleri kaçırmayın!</p>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="flex items-center space-x-6">
+                                <div class="hidden md:block relative">
+                    <input type="text" placeholder="Ürün ara..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent w-48 xl:w-64">
+                    <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                </div>
+                
+                                                <div id="auth-links-desktop" class="md:flex items-center space-x-4">
+                    <a href="./auth.html" data-page-id="auth" class="nav-link text-gray-700 hover:text-emerald-600 transition-colors flex items-center gap-2">
+                        <i class="far fa-user text-xl"></i>
+                        <span class="text-sm font-medium">Giriş Yap / Kayıt Ol</span>
+                    </a>
+                </div>
+                                <div id="user-links-desktop" class="hidden items-center space-x-4">
+                    <span id="user-email-desktop" class="text-sm text-gray-700 font-medium truncate max-w-[100px]"></span>
+                    <button id="logout-button-desktop" class="text-red-500 hover:text-red-700 transition-colors">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+                                                <a href="./cart.html" data-page-id="cart" class="nav-link text-gray-700 hover:text-emerald-600 transition-colors relative">
+                    <i class="fas fa-shopping-bag text-xl"></i>
+                    <span class="cart-badge hidden" id="cart-badge-desktop">0</span>
+                </a>
+                
+                                <button id="mobile-menu-button" class="lg:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+        <div class="mega-menu absolute left-0 right-0 bg-white border-t border-gray-200 py-8 z-50" id="mega-menu">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="mega-menu-column">
+                    <h4 class="text-lg font-bold">Kategoriler</h4>
+                    <ul>
+                        <li><a href="./products.html?category=forma">Formalar</a></li>
+                        <li><a href="./products.html?category=ayakkabi">Ayakkabılar</a></li>
+                        <li><a href="./products.html?category=aksesuar">Aksesuarlar</a></li>
+                        <li><a href="./products.html?category=top">Toplar</a></li>
+                    </ul>
+                </div>
+                <div class="mega-menu-column">
+                    <h4 class="text-lg font-bold">Markalar</h4>
+                    <ul>
+                        <li><a href="#">Nike</a></li>
+                        <li><a href="#">Adidas</a></li>
+                        <li><a href="#">Puma</a></li>
+                        <li><a href="#">Tüm Markalar</a></li>
+                    </ul>
+                </div>
+                <div class="mega-menu-column col-span-2">
+                    <img src="https://placehold.co/600x200/059669/white?text=SEZON+KAMPANYASI" alt="Kampanya" class="rounded-lg object-cover w-full">
+                    <h4 class="mt-4 text-base font-bold">Sezon İndirimleri</h4>
+                    <p class="text-sm text-gray-600">Seçili ürünlerde %50'ye varan indirimleri kaçırmayın!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
 
-<!-- Mobile Menu -->
 <div id="mobile-menu" class="mobile-menu fixed inset-0 z-[101] bg-white lg:hidden">
-    <div class="flex flex-col h-full">
-        <div class="flex items-center justify-between p-4 border-b">
-            <a href="./index.html" class="flex items-center">
-                <img src="./assets/PAFA TEAMSPORT LOGO.png" alt="PAFA TEAMSPORT Logo" class="w-12 h-12 mr-3">
-                <span class="text-xl font-black text-gray-900">PAFA <span class="text-emerald-600">TEAMSPORT</span></span>
-            </a>
-            <button id="close-mobile-menu" class="text-gray-700">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-        
-        <div class="flex-1 p-4 overflow-y-auto">
-            <nav class="flex flex-col space-y-2">
-                <a href="./index.html" data-page-id="index" class="mobile-nav-link text-gray-700 hover:text-emerald-600 font-medium text-lg transition-colors pl-4 py-3 rounded-lg">Ana Sayfa</a>
-                <a href="./products.html" data-page-id="products" class="mobile-nav-link text-gray-700 hover:text-emerald-600 font-medium text-lg transition-colors pl-4 py-3 rounded-lg">Ürünler</a>
-                <a href="./my-orders.html" data-page-id="my-orders" class="mobile-nav-link text-gray-700 hover:text-emerald-600 font-medium text-lg transition-colors pl-4 py-3 rounded-lg">Siparişlerim</a>
-                <a href="./admin.html" data-page-id="admin" id="mobile-admin-link" class="mobile-nav-link hidden text-red-600 hover:text-red-700 font-semibold text-lg transition-colors pl-4 py-3 rounded-lg">Admin Paneli</a>
-            </nav>
-            
-            <div class="mt-8 pt-8 border-t border-gray-200">
-                <!-- === AUTH BLOĞU (MOBİL) === -->
-                <!-- Giriş Yapılmadıysa -->
-                <div id="mobile-auth-links" class="flex flex-col space-y-4">
-                    <a href="./auth.html" data-page-id="auth" class="flex items-center text-gray-700 hover:text-emerald-600 transition-colors text-lg">
-                        <i class="far fa-user text-xl mr-3 w-6 text-center"></i>
-                        <span>Giriş Yap / Kayıt Ol</span>
-                    </a>
-                </div>
-                <!-- Giriş Yapıldıysa -->
-                <div id="mobile-user-links" class="hidden flex-col space-y-4">
-                    <div class="flex items-center text-gray-700">
-                         <i class="fas fa-user-check text-xl mr-3 w-6 text-center text-emerald-600"></i>
-                         <span id="mobile-user-email" class="text-sm font-medium truncate"></span>
-                    </div>
-                    <button id="mobile-logout-button" class="flex items-center text-red-600 hover:text-red-700 transition-colors text-lg">
-                        <i class="fas fa-sign-out-alt text-xl mr-3 w-6 text-center"></i>
-                        <span>Çıkış Yap</span>
-                    </button>
-                </div>
-                <!-- === AUTH BLOĞU BİTİŞ === -->
-                
-                <a href="./cart.html" data-page-id="cart" class="nav-link flex items-center text-gray-700 hover:text-emerald-600 transition-colors relative mt-4 text-lg">
-                    <i class="fas fa-shopping-bag text-xl mr-3 w-6 text-center"></i>
-                    <span>Sepetim</span>
-                    <span class="cart-badge cart-badge-count hidden ml-2">0</span>
-                </a>
-            </div>
-        </div>
-    </div>
+    <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between p-4 border-b">
+            <a href="./index.html" class="flex items-center">
+                <img src="./assets/PAFA TEAMSPORT LOGO.png" alt="PAFA TEAMSPORT Logo" class="w-12 h-12 mr-3">
+                <span class="text-xl font-black text-gray-900">PAFA <span class="text-emerald-600">TEAMSPORT</span></span>
+            </a>
+            <button id="close-mobile-menu" class="text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div class="flex-1 p-4 overflow-y-auto">
+            <nav class="flex flex-col space-y-2" id="mobile-menu-nav">
+                <a href="./index.html" data-page-id="index" class="mobile-nav-link text-gray-700 hover:text-emerald-600 font-medium text-lg transition-colors pl-4 py-3 rounded-lg">Ana Sayfa</a>
+                <a href="./products.html" data-page-id="products" class="mobile-nav-link text-gray-700 hover:text-emerald-600 font-medium text-lg transition-colors pl-4 py-3 rounded-lg">Ürünler</a>
+                <a href="./my-orders.html" data-page-id="my-orders" class="mobile-nav-link text-gray-700 hover:text-emerald-600 font-medium text-lg transition-colors pl-4 py-3 rounded-lg">Siparişlerim</a>
+                <a href="./admin.html" data-page-id="admin" id="admin-link-mobile" class="mobile-nav-link hidden text-red-600 hover:text-red-700 font-semibold text-lg transition-colors pl-4 py-3 rounded-lg">Admin Paneli</a>
+            </nav>
+            
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                                                <div id="auth-links-mobile" class="flex flex-col space-y-4">
+                    <a href="./auth.html" data-page-id="auth" class="flex items-center text-gray-700 hover:text-emerald-600 transition-colors text-lg">
+                        <i class="far fa-user text-xl mr-3 w-6 text-center"></i>
+                        <span>Giriş Yap / Kayıt Ol</span>
+                    </a>
+                </div>
+                                <div id="user-links-mobile" class="hidden flex-col space-y-4">
+                    <div class="flex items-center text-gray-700">
+                         <i class="fas fa-user-check text-xl mr-3 w-6 text-center text-emerald-600"></i>
+                         <span id="user-email-mobile" class="text-sm font-medium truncate"></span>
+                    </div>
+                    <button id="logout-button-mobile" class="flex items-center text-red-600 hover:text-red-700 transition-colors text-lg">
+                        <i class="fas fa-sign-out-alt text-xl mr-3 w-6 text-center"></i>
+                        <span>Çıkış Yap</span>
+                    </button>
+                </div>
+                                
+                <a href="./cart.html" data-page-id="cart" class="nav-link flex items-center text-gray-700 hover:text-emerald-600 transition-colors relative mt-4 text-lg">
+                    <i class="fas fa-shopping-bag text-xl mr-3 w-6 text-center"></i>
+                    <span>Sepetim</span>
+                    <span class="cart-badge hidden" id="cart-badge-mobile">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
