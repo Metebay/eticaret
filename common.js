@@ -1,5 +1,4 @@
 // --- PAFA TEAMSPORT E-TICARET COMMON.JS (SON HALİ) ---
-// Bu dosya, tüm HTML sayfaları tarafından paylaşılan tüm kritik JavaScript mantığını içerir.
 
 // === 1. FIREBASE SDK IMPORTS ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
@@ -534,7 +533,7 @@ export function renderAddressList(containerId) {
     if (!listContainer) return;
 
     if (!currentUser || !currentUser.addresses || currentUser.addresses.length === 0) {
-        listContainer.innerHTML = `<p class="text-gray-500 text-center col-span-full">Kayıtlı adresiniz bulunmuyor.</p>`;
+        listContainer.innerHTML = `<p class="text-gray-500 text-center col-span-full">Kayıtlı adresiniz bulunmuyor. Lütfen bir adres ekleyin.</p>`;
         return;
     }
 
@@ -550,10 +549,10 @@ export function renderAddressList(containerId) {
                 
                 ${addr.isDefault ? `<span class="absolute top-2 right-2 text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">Varsayılan</span>` : ''}
                 
-                <h4 class="font-semibold text-gray-800">${addr.title}</h4>
+                <h4 class="font-semibold text-gray-800">${addr.title || 'Adres Başlığı Yok'}</h4>
                 <p class="text-sm text-gray-600">${addr.name}</p>
                 <p class="text-sm text-gray-600">${addr.line1}</p>
-                <p class="text-sm text-gray-600">${addr.city}, ${addr.zip}</p>
+                <p class="text-sm text-gray-600">${addr.city}, ${addr.zip || ''}</p>
                 <p class="text-sm text-gray-600">Tel: ${addr.phone}</p>
                 
                 ${!isCheckoutPage ? `
@@ -597,7 +596,7 @@ export function removeFromCart(productId) {
     let cart = getCart();
     cart = cart.filter(item => item.id !== productId);
     saveCart(cart);
-    loadCartPage(); // Sepet sayfasını yeniden yükle
+    loadCartPage(); // Sepet sayfasını yeniden yükle (eğer o sayfadaysak)
 }
 
 export function updateCartQuantity(productId, quantity) {
@@ -611,7 +610,7 @@ export function updateCartQuantity(productId, quantity) {
             cart[existingProductIndex].quantity = quantity;
         }
         saveCart(cart);
-        loadCartPage(); // Sepet sayfasını yeniden yükle
+        loadCartPage(); // Sepet sayfasını yeniden yükle (eğer o sayfadaysak)
         loadCheckoutPage(); // Checkout'u da güncelle (eğer o sayfadaysa)
     }
 }
@@ -889,6 +888,7 @@ export function loadCartPage() {
         const discountedPrice = price * (1 - discount / 100);
         const itemTotal = discountedPrice * item.quantity;
         
+        // Sepet sayfasındaki ürün listesi içeriği
         html += `
             <div class="flex items-center justify-between py-6 border-b">
                 <div class="flex items-center space-x-4">
@@ -914,10 +914,13 @@ export function loadCartPage() {
     
     // Özeti güncelle
     const totalPrice = getCartTotalPrice();
-    document.getElementById('summary-subtotal').textContent = `${totalPrice.toFixed(2)} TL`;
-    document.getElementById('summary-total').textContent = `${totalPrice.toFixed(2)} TL`;
+    const subtotalEl = document.getElementById('summary-subtotal');
+    const totalEl = document.getElementById('summary-total');
+
+    if (subtotalEl) subtotalEl.textContent = `${totalPrice.toFixed(2)} TL`;
+    if (totalEl) totalEl.textContent = `${totalPrice.toFixed(2)} TL`;
     
-    // Fonksiyonları global scope'a ekle
+    // Fonksiyonları global scope'a ekle (Sepet sayfasının dinleyicileri)
     window.handleRemoveFromCart = removeFromCart;
     window.handleUpdateCartQuantity = updateCartQuantity;
 }
@@ -933,13 +936,16 @@ export function loadCheckoutPage() {
     }
 
     const cart = getCart();
-    const itemsDiv = document.getElementById('checkout-items');
-    const totalSpan = document.getElementById('checkout-total');
+    const itemsDiv = document.getElementById('checkout-items'); // Sipariş özeti ürün listesi ID'si
+    const totalSpan = document.getElementById('checkout-total'); // Toplam tutar ID'si
     const confirmButton = document.getElementById('confirm-order-button');
     
     if (!itemsDiv) return; // Checkout sayfasında değilsek çık
 
     if (cart.length === 0) {
+        showModal("Sepet Boş", "Sepetinizde ürün bulunmuyor. Ana sayfaya yönlendiriliyorsunuz.");
+        setTimeout(() => window.location.href = './index.html', 1500);
+
         itemsDiv.innerHTML = '<p class="text-gray-500">Sepetinizde ürün bulunmuyor.</p>';
         totalSpan.textContent = '0.00 TL';
         if (confirmButton) {
@@ -950,7 +956,8 @@ export function loadCheckoutPage() {
     }
     
     if (confirmButton) {
-        confirmButton.disabled = false;
+        // Adres seçimi yapılana kadar butonu devre dışı bırakma mantığı checkout.html'de yönetilir.
+        // Burada sadece sepetin boş olmadığından emin oluyoruz.
         confirmButton.classList.remove('opacity-50', 'cursor-not-allowed');
     }
     
@@ -958,8 +965,10 @@ export function loadCheckoutPage() {
     cart.forEach(item => {
         const discountedPrice = (item.price || 0) * (1 - (item.discount || 0) / 100);
         const itemTotal = discountedPrice * item.quantity;
+        
+        // Checkout sayfasındaki ürün özeti içeriği
         html += `
-            <div class="flex justify-between py-3 border-b">
+            <div class="flex justify-between py-1 text-sm">
                 <span class="text-gray-700">${item.name} (x${item.quantity})</span>
                 <span class="font-medium">${itemTotal.toFixed(2)} TL</span>
             </div>
@@ -968,7 +977,7 @@ export function loadCheckoutPage() {
     itemsDiv.innerHTML = html;
     
     const totalPrice = getCartTotalPrice();
-    totalSpan.textContent = `${totalPrice.toFixed(2)} TL`;
+    if (totalSpan) totalSpan.textContent = `${totalPrice.toFixed(2)} TL`;
 
     // Adres listesini yükle
     renderAddressList('checkout-address-list');
