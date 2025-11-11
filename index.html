@@ -6,10 +6,8 @@
     <title>PAFA TEAMSPORT - Spor Malzemelerinde Lider</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="./assets/PAFA TEAMSPORT LOGO.png" type="image/x-icon">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJ8u7X+64Tq3J9iJ17t6X5R8rJt3w2xK74MhK5D+5uR6vj0yT9iK0r71t6N0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
 <body data-page-id="index">
 
     <div id="header-placeholder"></div>
@@ -377,18 +375,18 @@
     <script type="module">
         import { 
             loadHeaderAndFooter,
-            $loadFeaturedProducts,
-            $startCountdown
+            $loadFeaturedProducts, 
+            $startCountdown 
         } from './common.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // 1. Header/Footer ve Auth yüklemesini bekle (Header yüklenemezse hata modalı gösterilecek)
+            // Header ve Footer yüklemesini bekle
             await loadHeaderAndFooter('index');
 
-            // 2. Öne Çıkan Ürünleri Yükle (Firestore'dan)
+            // Öne Çıkan Ürünleri Yükle
             $loadFeaturedProducts();
             
-            // 3. Countdown'ı Başlat (2 gün sonrası)
+            // Countdown'ı Başlat (2 gün sonrası)
             const targetDate = new Date();
             targetDate.setDate(targetDate.getDate() + 2); 
             targetDate.setHours(14, 38, 22, 0); 
