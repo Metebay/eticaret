@@ -380,13 +380,10 @@
         } from './common.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Header ve Footer yüklemesini bekle
             await loadHeaderAndFooter('index');
 
-            // Öne Çıkan Ürünleri Yükle
             $loadFeaturedProducts();
             
-            // Countdown'ı Başlat (2 gün sonrası)
             const targetDate = new Date();
             targetDate.setDate(targetDate.getDate() + 2); 
             targetDate.setHours(14, 38, 22, 0); 
